@@ -14,9 +14,12 @@ import Reveal from './components/common/Reveal'
 import SectionIntro, { Eyebrow, GoldRule } from './components/common/SectionIntro'
 import Layout from './components/layout/Layout'
 import CtaBand from './components/marketing/CtaBand'
+import MenuCatalog from './components/marketing/MenuCatalog'
+import MasonryGallery from './components/marketing/MasonryGallery'
 import PageHero from './components/marketing/PageHero'
-import { addonKeys, contact, gallerySources, heroImage, packageItems, serviceKeys } from './utils/siteData'
+import { addonKeys, contact, gallerySources, heroImage, packageItems, serviceKeys, storyImage, whyStandardImage } from './utils/siteData'
 import { loadOrderDraft, readableOrder } from './utils/order'
+import { buildOrderWhatsAppUrl } from './utils/whatsapp'
 import './styles/app.css'
 
 function usePageTitle(title) {
@@ -47,10 +50,10 @@ function Home() {
     </section>
     <section className="gallery-section">
       <Reveal className="shell gallery-heading"><div><Eyebrow>{h.galleryEyebrow}</Eyebrow><h2>{h.galleryTitle} <em>{h.galleryAccent}</em></h2></div><a className="text-link" href="https://instagram.com/standard_egypt" target="_blank" rel="noreferrer">{h.follow} <ArrowUpRight size={17} /></a></Reveal>
-      <div className="gallery-grid shell">{gallerySources.map((src, i) => <Reveal key={src} delay={i * 65} className={'gallery-grid__item gallery-grid__item--' + (i + 1)}><img src={src} alt={c.galleryAlt[i]} loading="lazy" /></Reveal>)}</div>
+      <Reveal className="shell"><MasonryGallery className="home-masonry" label={h.galleryTitle} items={gallerySources.map((src, i) => ({ src, alt: c.galleryAlt[i] }))} /></Reveal>
     </section>
     <section className="why-section"><div className="shell why-section__grid">
-      <Reveal className="why-section__image"><img src="https://images.unsplash.com/photo-1560624052-449f5ddf0c31?auto=format&fit=crop&w=1100&q=85" alt={h.imageAlt} loading="lazy" /><span className="image-stamp"><Star fill="currentColor" size={20} /> <b>{h.made}<br />{h.mobile}</b></span></Reveal>
+      <Reveal className="why-section__image"><img src={whyStandardImage} alt={h.imageAlt} loading="lazy" /><span className="image-stamp"><Star fill="currentColor" size={20} /> <b>{h.made}<br />{h.mobile}</b></span></Reveal>
       <Reveal delay={120} className="why-section__content"><SectionIntro eyebrow={h.whyEyebrow} title={h.whyTitle} copy={h.whyCopy} /><ul className="check-list">{h.checks.map(text => <li key={text}><Check /> {text}</li>)}</ul><Link className="text-link" to="/about">{h.meet} <ArrowRight size={17} /></Link></Reveal>
     </div></section>
     <Reveal className="testimonial-section shell"><div className="quote-mark">“</div><blockquote>{h.feedback}</blockquote><div className="testimonial-author"><span>{h.feedbackLabel}</span><i /> <span>{h.feedbackType}</span></div></Reveal>
@@ -73,6 +76,7 @@ function Menu() {
     <section className="section shell package-section">
       <div className="filter-tabs" role="tablist" aria-label={m.filter}>{categories.map(category => <button key={category} role="tab" aria-selected={filter === category} onClick={() => setFilter(category)} className={filter === category ? 'active' : ''}>{m.categories[category]}</button>)}</div>
       <div className="package-grid">{visible.map((item, index) => <Reveal key={item.id} delay={index * 70}><PackageCard item={item} /></Reveal>)}</div>
+      <MenuCatalog />
       <Reveal className="addons"><SectionIntro eyebrow={m.addonsEyebrow} title={m.addonsTitle} /><div className="addon-list">{m.addons.map((item, i) => <Link key={item} to={'/order?service=' + addonKeys[i]}><span>{String(i + 1).padStart(2, '0')}</span>{item}<Plus size={17} /></Link>)}</div></Reveal>
     </section><CtaBand /></>
 }
@@ -80,7 +84,7 @@ function Menu() {
 function PackageCard({ item }) {
   const { c } = useLocale()
   const details = c.packages[item.id]
-  return <article className="package-card"><div className="package-card__image"><img src={item.image} alt={details.title} loading="lazy" /><span>{c.menu.categories[item.category]}</span></div><div className="package-card__body"><h2>{details.title}</h2><p>{details.description}</p><ul>{details.features.map(feature => <li key={feature}><Check size={14} />{feature}</li>)}</ul><div className="package-card__bottom"><span>{c.common.customQuote}</span><Link to={'/order?package=' + item.id}>{c.common.requestThis} <ArrowRight size={16} /></Link></div></div></article>
+  return <article className="package-card"><div className="package-card__image"><img src={item.image} alt={details.title} loading="lazy" /><span>{c.menu.categories[item.category]}</span></div><div className="package-card__body"><h2>{details.title}</h2><p>{details.description}</p><ul>{details.features.map(feature => <li key={feature}><Check size={14} />{feature}</li>)}</ul><div className="package-card__bottom"><Link to={'/order?package=' + item.id}>{c.common.requestThis} <ArrowRight size={16} /></Link></div></div></article>
 }
 
 function About() {
@@ -88,9 +92,9 @@ function About() {
   const a = c.about
   usePageTitle(a.pageTitle)
   return <><PageHero eyebrow={a.eyebrow} title={<>{a.title} <em>{a.accent}</em></>} copy={a.copy} />
-    <section className="section shell story-grid"><Reveal className="story-grid__image"><img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=85" alt={a.imageAlt} loading="lazy" /></Reveal><Reveal delay={110} className="story-grid__content"><SectionIntro eyebrow={a.storyEyebrow} title={a.storyTitle} /><p>{a.p1}</p><p>{a.p2}</p><Link className="text-link" to="/order">{a.event} <ArrowRight size={17} /></Link></Reveal></section>
+    <section className="section shell story-grid"><Reveal className="story-grid__image"><MasonryGallery className="story-masonry" label={a.imageAlt} items={[{ src: storyImage, alt: a.imageAlt }, { src: gallerySources[0], alt: c.galleryAlt[0] }, { src: gallerySources[3], alt: c.galleryAlt[3] }]} /></Reveal><Reveal delay={110} className="story-grid__content"><SectionIntro eyebrow={a.storyEyebrow} title={a.storyTitle} /><p>{a.p1}</p><p>{a.p2}</p><Link className="text-link" to="/order">{a.event} <ArrowRight size={17} /></Link></Reveal></section>
     <section className="occasion-section"><div className="shell"><Reveal><SectionIntro eyebrow={a.occasionEyebrow} title={a.occasionTitle} centered /></Reveal><div className="occasion-grid">{a.occasions.map((title, i) => <Reveal key={title} delay={i * 75}><Occasion icon={i === 0 ? <Heart /> : i === 1 ? <Building2 /> : i === 2 ? <Sparkles /> : <Users />} title={title} /></Reveal>)}</div></div></section>
-    <section className="shell about-gallery"><Reveal className="about-gallery__large"><img src={gallerySources[3]} alt={c.galleryAlt[3]} loading="lazy" /></Reveal><Reveal delay={75}><img src={gallerySources[5]} alt={c.galleryAlt[5]} loading="lazy" /><img src={gallerySources[1]} alt={c.galleryAlt[1]} loading="lazy" /></Reveal><Reveal delay={150} className="about-gallery__message"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal></section>
+    <section className="shell about-gallery"><Reveal className="about-gallery__heading"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal><Reveal delay={85}><MasonryGallery className="about-masonry" label={a.gallery} items={[gallerySources[3], gallerySources[5], gallerySources[1], gallerySources[0], gallerySources[4], gallerySources[2]].map((src, i) => ({ src, alt: c.galleryAlt[[3, 5, 1, 0, 4, 2][i]] }))} /></Reveal></section>
     <CtaBand />
   </>
 }
@@ -150,6 +154,7 @@ function Order() {
     if (!validate()) return
     const ref = 'STD-' + new Date().toISOString().slice(0, 10).replaceAll('-', '') + '-' + Math.floor(1000 + Math.random() * 9000)
     sessionStorage.removeItem('standard_order_draft')
+    window.open(buildOrderWhatsAppUrl(order, c, language, ref), '_blank', 'noopener,noreferrer')
     navigate('/order/success', { state: { order, ref, language } })
   }
   return <><PageHero eyebrow={o.eyebrow} title={<>{o.title} <em>{o.accent}</em></>} copy={o.copy} />

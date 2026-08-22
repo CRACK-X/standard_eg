@@ -1,30 +1,51 @@
+import heroPizzaStation from '../assets/WhatsApp Image 2026-08-21 at 7.35.58 PM.jpeg'
+import outdoorGrill from '../assets/WhatsApp Image 2026-08-21 at 7.36.00 PM.jpeg'
+import corporateGrill from '../assets/IMG_2338.JPG.jpeg'
+import brandedFoodCarts from '../assets/IMG_4243.JPG.jpeg'
+import celebrationCarts from '../assets/IMG_2854.JPG.jpeg'
+import pizzaCloseup from '../assets/IMG_0055.JPG.jpeg'
+import burgerCatering from '../assets/IMG_2928.JPG.jpeg'
+import dessertStation from '../assets/IMG_3119.JPG.jpeg'
+import iceCreamStation from '../assets/WhatsApp Image 2026-08-21 at 6.43.19 PM (1).jpeg'
+import burgerStation from '../assets/WhatsApp Image 2026-08-21 at 7.53.39 PM.jpeg'
+import fruitStation from '../assets/WhatsApp Image 2026-08-21 at 7.53.42 PM.jpeg'
+import standardTeam from '../assets/WhatsApp Image 2026-08-21 at 6.43.19 PM.jpeg'
+
 export const contact = {
-  phoneDisplay: '01X XXX XXXX',
-  phoneHref: 'tel:+201000000000',
-  whatsapp: 'https://wa.me/201000000000?text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.',
+  phoneDisplay: '01278443523',
+  phoneHref: 'tel:+201278443523',
+  whatsappNumber: '201278443523',
+  whatsapp: 'https://wa.me/201278443523?text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.',
   email: 'hello@standardcatering.eg',
 }
 
-export const heroImage = 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=2200&q=85'
+export const heroImage = heroPizzaStation
+export const storyImage = standardTeam
+export const whyStandardImage = outdoorGrill
 
-// TODO: Replace temporary visual placeholders with approved Standard event photography before launch.
 export const packageItems = [
-  { id: 'wedding-full-catering', category: 'weddings', image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=85' },
-  { id: 'food-truck-classic', category: 'trucks', image: 'https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=1000&q=85' },
-  { id: 'waffle-dessert-station', category: 'trucks', image: 'https://images.unsplash.com/photo-1558584724-0e4d32ca55a4?auto=format&fit=crop&w=1000&q=85' },
-  { id: 'corporate-activation', category: 'corporate', image: 'https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=1000&q=85' },
-  { id: 'birthday-treat-cart', category: 'birthdays', image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=1000&q=85' },
-  { id: 'drinks-refreshments', category: 'birthdays', image: 'https://images.unsplash.com/photo-1481671703460-040cb8a2d909?auto=format&fit=crop&w=1000&q=85' },
+  { id: 'wedding-full-catering', category: 'weddings', image: outdoorGrill },
+  { id: 'food-truck-classic', category: 'trucks', image: brandedFoodCarts },
+  { id: 'waffle-dessert-station', category: 'trucks', image: dessertStation },
+  { id: 'corporate-activation', category: 'corporate', image: corporateGrill },
+  { id: 'birthday-treat-cart', category: 'birthdays', image: celebrationCarts },
+  { id: 'drinks-refreshments', category: 'birthdays', image: fruitStation },
 ]
 
 export const gallerySources = [
-  'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=85',
-  'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=900&q=85',
+  outdoorGrill,
+  pizzaCloseup,
+  brandedFoodCarts,
+  burgerCatering,
+  iceCreamStation,
+  burgerStation,
 ]
+
+export const menuCollectionImages = {
+  favourites: burgerStation,
+  setMenu: corporateGrill,
+  openBuffet: outdoorGrill,
+}
 
 export const serviceKeys = ['buffet', 'truck', 'dessert', 'drinks', 'snack', 'live', 'full', 'recommend']
 export const addonKeys = ['addon0', 'addon1', 'addon2', 'addon3', 'addon4', 'addon5']

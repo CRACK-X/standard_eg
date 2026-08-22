@@ -1,0 +1,19 @@
+{
+  "name": "Standard Catering",
+  "short_name": "Standard",
+  "description": "Mobile catering, food trucks, open buffets and live food stations across Egypt.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7ef",
+  "theme_color": "#0b1f3a",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "720x720",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

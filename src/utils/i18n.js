@@ -4,7 +4,7 @@ const content = {
   en: {
     nav: { home: 'Home', menu: 'Menu & Packages', story: 'Our Story', contact: 'Contact', order: 'Start your order', toggle: 'العربية', menuToggle: 'Toggle navigation' },
     footer: { tagline: 'Casual catering for every occasion. We bring the feast to you.', explore: 'Explore', talk: 'Talk to us', whatsapp: 'WhatsApp us', area: 'Cairo, Giza & Alexandria', mobile: 'Mobile catering across Egypt', rights: 'All rights reserved.', made: 'Made for celebrations.' },
-    common: { customQuote: 'Custom quote', requestThis: 'Request this', optional: 'Optional', edit: 'Edit', back: 'Back', continue: 'Continue', notChosen: 'Not chosen yet', whatsapp: 'WhatsApp', email: 'Email', phone: 'Phone call' },
+    common: { requestThis: 'Request this', optional: 'Optional', edit: 'Edit', back: 'Back', continue: 'Continue', notChosen: 'Not chosen yet', whatsapp: 'WhatsApp', email: 'Email', phone: 'Phone call' },
     home: {
       pageTitle: 'Catering crafted for every celebration',
       eyebrow: 'Mobile event catering · Egypt',
@@ -89,7 +89,7 @@ const content = {
   ar: {
     nav: { home: 'الرئيسية', menu: 'الباقات والقائمة', story: 'قصتنا', contact: 'تواصل معنا', order: 'ابدأ طلبك', toggle: 'EN', menuToggle: 'فتح قائمة التنقل' },
     footer: { tagline: 'ضيافة مميزة لكل مناسبة. نأتي بالوليمة إليك.', explore: 'استكشف', talk: 'تحدث معنا', whatsapp: 'راسلنا عبر واتساب', area: 'القاهرة والجيزة والإسكندرية', mobile: 'ضيافة متنقلة في أنحاء مصر', rights: 'جميع الحقوق محفوظة.', made: 'صُنع للاحتفال.' },
-    common: { customQuote: 'عرض سعر مخصص', requestThis: 'اطلب هذه الباقة', optional: 'اختياري', edit: 'تعديل', back: 'رجوع', continue: 'متابعة', notChosen: 'لم يتم الاختيار بعد', whatsapp: 'واتساب', email: 'البريد الإلكتروني', phone: 'مكالمة هاتفية' },
+    common: { requestThis: 'اطلب هذه الباقة', optional: 'اختياري', edit: 'تعديل', back: 'رجوع', continue: 'متابعة', notChosen: 'لم يتم الاختيار بعد', whatsapp: 'واتساب', email: 'البريد الإلكتروني', phone: 'مكالمة هاتفية' },
     home: {
       pageTitle: 'ضيافة مصممة لكل احتفال',
       eyebrow: 'ضيافة فعاليات متنقلة · مصر',
