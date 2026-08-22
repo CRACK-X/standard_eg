@@ -15,7 +15,12 @@ export const contact = {
   phoneDisplay: '01277711157',
   phoneHref: 'tel:+201277711157',
   whatsappNumber: '201277711157',
-  whatsapp: 'https://wa.me/201277711157?text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.',
+  get whatsapp() {
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '')
+    const base = isMobile ? 'whatsapp://send?phone=' : 'https://wa.me/'
+    const sep = isMobile ? '&' : '?'
+    return `${base}201277711157${sep}text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.`
+  },
   email: 'Standardcatering777@gmail.com',
 }
 

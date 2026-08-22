@@ -58,5 +58,9 @@ export function buildOrderWhatsAppUrl(order, c, language, referenceNumber) {
     ? arabicMessage(order, c, referenceNumber)
     : englishMessage(order, c, referenceNumber)
 
-  return 'https://wa.me/' + contact.whatsappNumber + '?text=' + encodeURIComponent(message)
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '')
+  const base = isMobile ? 'whatsapp://send?phone=' : 'https://wa.me/'
+  const sep = isMobile ? '&' : '?'
+
+  return base + contact.whatsappNumber + sep + 'text=' + encodeURIComponent(message)
 }
