@@ -12,11 +12,14 @@ import { LocaleProvider, useLocale } from './utils/i18n'
 import Logo from './components/common/Logo'
 import Reveal from './components/common/Reveal'
 import SectionIntro, { Eyebrow, GoldRule } from './components/common/SectionIntro'
+import { lazy, Suspense } from 'react'
 import Layout from './components/layout/Layout'
-import CtaBand from './components/marketing/CtaBand'
-import MenuCatalog from './components/marketing/MenuCatalog'
-import MasonryGallery from './components/marketing/MasonryGallery'
-import PageHero from './components/marketing/PageHero'
+
+const CtaBand = lazy(() => import('./components/marketing/CtaBand'))
+const MenuCatalog = lazy(() => import('./components/marketing/MenuCatalog'))
+const MasonryGallery = lazy(() => import('./components/marketing/MasonryGallery'))
+const PageHero = lazy(() => import('./components/marketing/PageHero'))
+const TrustMarquee = lazy(() => import('./components/marketing/TrustMarquee'))
 import { addonKeys, contact, gallerySources, heroImage, packageItems, serviceKeys, storyImage, whyStandardImage } from './utils/siteData'
 import { loadOrderDraft, readableOrder } from './utils/order'
 import { buildOrderWhatsAppUrl } from './utils/whatsapp'
@@ -31,7 +34,8 @@ function Home() {
   const h = c.home
   usePageTitle(h.pageTitle)
   return <>
-    <section className="home-hero" style={{ backgroundImage: 'url(' + heroImage + ')' }}>
+    <section className="home-hero">
+      <img src={heroImage} alt="" className="home-hero__bg" fetchPriority="high" loading="eager" width="1200" height="800" />
       <div className="home-hero__shade" />
       <div className="shell home-hero__content hero-entrance">
         <Eyebrow>{h.eyebrow}</Eyebrow>
@@ -41,7 +45,7 @@ function Home() {
         <div className="hero-scroll"><span /> {h.scroll}</div>
       </div>
     </section>
-    <section className="trust-strip"><div className="shell trust-strip__inner"><span>{h.trusted}</span><div className="brand-list"><b>JOTUN</b><b>P&amp;G</b><b>amazon</b><b>ORASCOM</b></div></div></section>
+    <section className="trust-strip"><div className="shell trust-strip__inner"><span className="trust-strip__label">{h.trusted}</span><TrustMarquee label={h.trusted} /></div></section>
     <section className="section shell services-section">
       <Reveal><SectionIntro eyebrow={h.servicesEyebrow} title={h.servicesTitle} copy={h.servicesCopy} centered /></Reveal>
       <div className="service-grid">
@@ -53,7 +57,7 @@ function Home() {
       <Reveal className="shell"><MasonryGallery className="home-masonry" label={h.galleryTitle} items={gallerySources.map((src, i) => ({ src, alt: c.galleryAlt[i] }))} /></Reveal>
     </section>
     <section className="why-section"><div className="shell why-section__grid">
-      <Reveal className="why-section__image"><img src={whyStandardImage} alt={h.imageAlt} loading="lazy" /><span className="image-stamp"><Star fill="currentColor" size={20} /> <b>{h.made}<br />{h.mobile}</b></span></Reveal>
+      <Reveal className="why-section__image"><img src={whyStandardImage} alt={h.imageAlt} loading="lazy" width="600" height="535" /><span className="image-stamp"><Star fill="currentColor" size={20} /> <b>{h.made}<br />{h.mobile}</b></span></Reveal>
       <Reveal delay={120} className="why-section__content"><SectionIntro eyebrow={h.whyEyebrow} title={h.whyTitle} copy={h.whyCopy} /><ul className="check-list">{h.checks.map(text => <li key={text}><Check /> {text}</li>)}</ul><Link className="text-link" to="/about">{h.meet} <ArrowRight size={17} /></Link></Reveal>
     </div></section>
     <Reveal className="testimonial-section shell"><div className="quote-mark">“</div><blockquote>{h.feedback}</blockquote><div className="testimonial-author"><span>{h.feedbackLabel}</span><i /> <span>{h.feedbackType}</span></div></Reveal>
@@ -84,7 +88,7 @@ function Menu() {
 function PackageCard({ item }) {
   const { c } = useLocale()
   const details = c.packages[item.id]
-  return <article className="package-card"><div className="package-card__image"><img src={item.image} alt={details.title} loading="lazy" /><span>{c.menu.categories[item.category]}</span></div><div className="package-card__body"><h2>{details.title}</h2><p>{details.description}</p><ul>{details.features.map(feature => <li key={feature}><Check size={14} />{feature}</li>)}</ul><div className="package-card__bottom"><Link to={'/order?package=' + item.id}>{c.common.requestThis} <ArrowRight size={16} /></Link></div></div></article>
+  return <article className="package-card"><div className="package-card__image"><img src={item.image} alt={details.title} loading="lazy" width="600" height="400" /><span>{c.menu.categories[item.category]}</span></div><div className="package-card__body"><h2>{details.title}</h2><p>{details.description}</p><ul>{details.features.map(feature => <li key={feature}><Check size={14} />{feature}</li>)}</ul><div className="package-card__bottom"><Link to={'/order?package=' + item.id}>{c.common.requestThis} <ArrowRight size={16} /></Link></div></div></article>
 }
 
 function About() {
@@ -249,7 +253,7 @@ function NotFound() {
 }
 
 function AppRoutes() {
-  return <Layout><Routes><Route path="/" element={<Home />} /><Route path="/menu" element={<Menu />} /><Route path="/about" element={<About />} /><Route path="/contact" element={<Contact />} /><Route path="/order" element={<Order />} /><Route path="/order/success" element={<OrderSuccess />} /><Route path="*" element={<NotFound />} /></Routes></Layout>
+  return <Layout><Suspense fallback={<div className="loading-fallback">Loading...</div>}><Routes><Route path="/" element={<Home />} /><Route path="/menu" element={<Menu />} /><Route path="/about" element={<About />} /><Route path="/contact" element={<Contact />} /><Route path="/order" element={<Order />} /><Route path="/order/success" element={<OrderSuccess />} /><Route path="*" element={<NotFound />} /></Routes></Suspense></Layout>
 }
 
 function App() {

@@ -12,11 +12,11 @@ import fruitStation from '../assets/WhatsApp Image 2026-08-21 at 7.53.42 PM.jpeg
 import standardTeam from '../assets/WhatsApp Image 2026-08-21 at 6.43.19 PM.jpeg'
 
 export const contact = {
-  phoneDisplay: '01278443523',
-  phoneHref: 'tel:+201278443523',
-  whatsappNumber: '201278443523',
-  whatsapp: 'https://wa.me/201278443523?text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.',
-  email: 'hello@standardcatering.eg',
+  phoneDisplay: '01277711157',
+  phoneHref: 'tel:+201277711157',
+  whatsappNumber: '201277711157',
+  whatsapp: 'https://wa.me/201277711157?text=Hi%20Standard%2C%20I%27d%20like%20to%20ask%20about%20catering.',
+  email: 'Standardcatering777@gmail.com',
 }
 
 export const heroImage = heroPizzaStation

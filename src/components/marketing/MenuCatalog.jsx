@@ -16,7 +16,7 @@ export default function MenuCatalog() {
     <div className="menu-catalog__grid">
       {Object.entries(catalog.collections).map(([key, collection], index) => <Reveal key={key} delay={index * 85}>
         <article className="menu-collection">
-          <img className="menu-collection__image" src={menuCollectionImages[key]} alt={collection.title} loading="lazy" />
+          <img className="menu-collection__image" src={menuCollectionImages[key]} alt={collection.title} loading="lazy" width="600" height="400" />
           <div className="menu-collection__body">
             <h3>{collection.title}</h3>
             <p>{collection.intro}</p>
