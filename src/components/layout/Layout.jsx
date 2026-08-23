@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import Footer from './Footer'
 import FloatingContact from './FloatingContact'
 import Header from './Header'
+import CartDrawer from './CartDrawer'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -15,5 +16,5 @@ function ScrollToTop() {
 }
 
 export default function Layout({ children }) {
-  return <><ScrollToTop /><Header /><main>{children}</main><Footer /><FloatingContact /></>
+  return <><ScrollToTop /><Header /><main>{children}</main><Footer /><FloatingContact /><CartDrawer /></>
 }

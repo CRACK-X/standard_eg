@@ -1,12 +1,10 @@
-import { packageItems } from './siteData'
+import { menuItems } from './siteData'
 
 export const initialOrder = {
-  eventType: '',
   date: '',
-  guests: '',
+  time: '',
   city: '',
-  services: [],
-  budget: '',
+  address: '',
   name: '',
   phone: '',
   email: '',
@@ -26,7 +24,7 @@ export function loadOrderDraft(searchParams) {
 
   const presetService = searchParams.get('service')
   const presetPackage = searchParams.get('package')
-  const preset = presetService || (packageItems.some(item => item.id === presetPackage) ? presetPackage : '')
+  const preset = presetService || (menuItems.some(item => item.id === presetPackage) ? presetPackage : '')
 
   return {
     ...saved,

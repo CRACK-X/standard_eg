@@ -1,20 +1,20 @@
 import { contact } from './siteData'
 import { readableOrder } from './order'
 
-function englishMessage(order, c, referenceNumber) {
+function englishMessage(order, items, c, referenceNumber) {
+  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (Note: ${item.note})` : ''}`).join('\n')
   return [
     '*NEW CATERING REQUEST*',
     'Reference: ' + referenceNumber,
     '',
-    '*EVENT DETAILS*',
-    '• Occasion: ' + readableOrder(order, c, 'eventType'),
+    '*DELIVERY DETAILS*',
     '• Date: ' + (order.date || c.common.notChosen),
-    '• Guests: ' + readableOrder(order, c, 'guests'),
+    '• Time: ' + (order.time || c.common.notChosen),
     '• City: ' + (order.city || c.common.notChosen),
+    '• Address: ' + (order.address || c.common.notChosen),
     '',
-    '*REQUESTED SERVICES*',
-    '• Services: ' + readableOrder(order, c, 'services'),
-    '• Budget: ' + readableOrder(order, c, 'budget'),
+    '*CART ITEMS*',
+    cartText || 'Empty Cart',
     '',
     '*CONTACT DETAILS*',
     '• Name: ' + (order.name || c.common.notChosen),
@@ -27,20 +27,20 @@ function englishMessage(order, c, referenceNumber) {
   ].join('\n')
 }
 
-function arabicMessage(order, c, referenceNumber) {
+function arabicMessage(order, items, c, referenceNumber) {
+  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (ملاحظة: ${item.note})` : ''}`).join('\n')
   return [
     '*طلب ضيافة جديد*',
     'رقم الطلب: ' + referenceNumber,
     '',
-    '*تفاصيل المناسبة*',
-    '• المناسبة: ' + readableOrder(order, c, 'eventType'),
+    '*تفاصيل التوصيل*',
     '• التاريخ: ' + (order.date || c.common.notChosen),
-    '• عدد الضيوف: ' + readableOrder(order, c, 'guests'),
+    '• الوقت: ' + (order.time || c.common.notChosen),
     '• المدينة: ' + (order.city || c.common.notChosen),
+    '• العنوان: ' + (order.address || c.common.notChosen),
     '',
-    '*الخدمات المطلوبة*',
-    '• الخدمات: ' + readableOrder(order, c, 'services'),
-    '• الميزانية: ' + readableOrder(order, c, 'budget'),
+    '*عناصر السلة*',
+    cartText || 'سلة فارغة',
     '',
     '*بيانات التواصل*',
     '• الاسم: ' + (order.name || c.common.notChosen),
@@ -53,10 +53,10 @@ function arabicMessage(order, c, referenceNumber) {
   ].join('\n')
 }
 
-export function buildOrderWhatsAppUrl(order, c, language, referenceNumber) {
+export function buildOrderWhatsAppUrl(order, items, c, language, referenceNumber) {
   const message = language === 'ar'
-    ? arabicMessage(order, c, referenceNumber)
-    : englishMessage(order, c, referenceNumber)
+    ? arabicMessage(order, items, c, referenceNumber)
+    : englishMessage(order, items, c, referenceNumber)
 
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '')
   const base = isMobile ? 'whatsapp://send?phone=' : 'https://wa.me/'

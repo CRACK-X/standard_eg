@@ -28,13 +28,13 @@ export const heroImage = heroPizzaStation
 export const storyImage = standardTeam
 export const whyStandardImage = outdoorGrill
 
-export const packageItems = [
-  { id: 'wedding-full-catering', category: 'weddings', image: outdoorGrill },
-  { id: 'food-truck-classic', category: 'trucks', image: brandedFoodCarts },
-  { id: 'waffle-dessert-station', category: 'trucks', image: dessertStation },
-  { id: 'corporate-activation', category: 'corporate', image: corporateGrill },
-  { id: 'birthday-treat-cart', category: 'birthdays', image: celebrationCarts },
-  { id: 'drinks-refreshments', category: 'birthdays', image: fruitStation },
+export const menuItems = [
+  { id: 'classic-burger', category: 'mains', image: burgerStation },
+  { id: 'margherita-pizza', category: 'mains', image: pizzaCloseup },
+  { id: 'crispy-fries', category: 'sides', image: brandedFoodCarts },
+  { id: 'sweet-waffle', category: 'desserts', image: dessertStation },
+  { id: 'ice-cream-scoops', category: 'desserts', image: iceCreamStation },
+  { id: 'fresh-juice', category: 'drinks', image: fruitStation },
 ]
 
 export const gallerySources = [
