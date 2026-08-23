@@ -14,20 +14,21 @@ import Reveal from './components/common/Reveal'
 import SectionIntro, { Eyebrow, GoldRule } from './components/common/SectionIntro'
 import { lazy, Suspense } from 'react'
 import Layout from './components/layout/Layout'
+import CookieBanner from './components/layout/CookieBanner'
 
 const CtaBand = lazy(() => import('./components/marketing/CtaBand'))
 const MenuCatalog = lazy(() => import('./components/marketing/MenuCatalog'))
 const MasonryGallery = lazy(() => import('./components/marketing/MasonryGallery'))
 const PageHero = lazy(() => import('./components/marketing/PageHero'))
 const TrustMarquee = lazy(() => import('./components/marketing/TrustMarquee'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
+const Terms = lazy(() => import('./pages/Terms'))
 import { addonKeys, contact, gallerySources, heroImage, packageItems, serviceKeys, storyImage, whyStandardImage } from './utils/siteData'
 import { loadOrderDraft, readableOrder } from './utils/order'
 import { buildOrderWhatsAppUrl } from './utils/whatsapp'
+import { usePageTitle } from './utils/usePageTitle'
 import './styles/app.css'
 
-function usePageTitle(title) {
-  useEffect(() => { document.title = title + ' | Standard Catering' }, [title])
-}
 
 function Home() {
   const { c } = useLocale()
@@ -98,6 +99,12 @@ function About() {
   return <><PageHero eyebrow={a.eyebrow} title={<>{a.title} <em>{a.accent}</em></>} copy={a.copy} />
     <section className="section shell story-grid"><Reveal className="story-grid__image"><MasonryGallery className="story-masonry" label={a.imageAlt} items={[{ src: storyImage, alt: a.imageAlt }, { src: gallerySources[0], alt: c.galleryAlt[0] }, { src: gallerySources[3], alt: c.galleryAlt[3] }]} /></Reveal><Reveal delay={110} className="story-grid__content"><SectionIntro eyebrow={a.storyEyebrow} title={a.storyTitle} /><p>{a.p1}</p><p>{a.p2}</p><Link className="text-link" to="/order">{a.event} <ArrowRight size={17} /></Link></Reveal></section>
     <section className="occasion-section"><div className="shell"><Reveal><SectionIntro eyebrow={a.occasionEyebrow} title={a.occasionTitle} centered /></Reveal><div className="occasion-grid">{a.occasions.map((title, i) => <Reveal key={title} delay={i * 75}><Occasion icon={i === 0 ? <Heart /> : i === 1 ? <Building2 /> : i === 2 ? <Sparkles /> : <Users />} title={title} /></Reveal>)}</div></div></section>
+    <section className="section shell faq-section">
+      <Reveal><SectionIntro eyebrow={c.faq.eyebrow} title={c.faq.title} centered /></Reveal>
+      <Reveal delay={100} className="faq-grid">
+        {c.faq.items.map((item, i) => <div className="faq-item" key={i}><h4>{item.q}</h4><p>{item.a}</p></div>)}
+      </Reveal>
+    </section>
     <section className="shell about-gallery"><Reveal className="about-gallery__heading"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal><Reveal delay={85}><MasonryGallery className="about-masonry" label={a.gallery} items={[gallerySources[3], gallerySources[5], gallerySources[1], gallerySources[0], gallerySources[4], gallerySources[2]].map((src, i) => ({ src, alt: c.galleryAlt[[3, 5, 1, 0, 4, 2][i]] }))} /></Reveal></section>
     <CtaBand />
   </>
@@ -110,11 +117,17 @@ function Contact() {
   const x = c.contact
   usePageTitle(x.pageTitle)
   const [sent, setSent] = useState(false)
-  const handleSubmit = e => { e.preventDefault(); setSent(true); e.currentTarget.reset() }
+  const handleSubmit = e => {
+    e.preventDefault()
+    const honeypot = e.currentTarget.querySelector('input[name="_website"]')
+    if (honeypot && honeypot.value) return
+    setSent(true)
+    e.currentTarget.reset()
+  }
   return <><PageHero eyebrow={x.eyebrow} title={<>{x.title} <em>{x.accent}</em></>} copy={x.copy} />
     <section className="section shell contact-layout">
-      <Reveal className="contact-form-wrap"><SectionIntro eyebrow={x.formEyebrow} title={x.formTitle} /><form className="contact-form" onSubmit={handleSubmit}>{sent && <div className="form-success"><CircleCheck /> {x.sent}</div>}<div className="form-row"><Field label={x.name} name="name" required /><Field label={x.phone} name="phone" type="tel" required /></div><Field label={x.email} name="email" type="email" placeholder={c.common.optional} /><label>{x.topic}<select name="topic" defaultValue={x.topics[0]}>{x.topics.map(topic => <option key={topic}>{topic}</option>)}</select><ChevronDown /></label><label>{x.message}<textarea name="message" rows="5" required placeholder={x.messagePlaceholder} /></label><button className="button button--navy" type="submit">{x.send} <ArrowRight size={17} /></button></form></Reveal>
-      <Reveal delay={120} className="contact-info"><Eyebrow>{x.quick}</Eyebrow><h2>{x.direct}</h2><div className="contact-info__card"><a href={contact.phoneHref}><span><Phone /></span><div><small>{x.call}</small><b>{contact.phoneDisplay}</b></div><ArrowUpRight size={18} /></a><a href={contact.whatsapp} target="_blank" rel="noreferrer"><span><MessageCircle /></span><div><small>{c.common.whatsapp}</small><b>{x.chat}</b></div><ArrowUpRight size={18} /></a><a href={'mailto:' + contact.email}><span><Mail /></span><div><small>{c.common.email}</small><b>{contact.email}</b></div><ArrowUpRight size={18} /></a></div><div className="service-area"><MapPin /><div><b>{x.come}</b><p>{x.area}</p></div></div><p className="contact-note">{x.note}</p></Reveal>
+      <Reveal className="contact-form-wrap"><SectionIntro eyebrow={x.formEyebrow} title={x.formTitle} /><form className="contact-form" onSubmit={handleSubmit}>{sent && <div className="form-success"><CircleCheck /> {x.sent}</div>}<input name="_website" type="text" style={{display:'none'}} tabIndex="-1" autoComplete="off" /><div className="form-row"><Field label={x.name} name="name" required /><Field label={x.phone} name="phone" type="tel" required /></div><Field label={x.email} name="email" type="email" placeholder={c.common.optional} /><label>{x.topic}<select name="topic" defaultValue={x.topics[0]}>{x.topics.map(topic => <option key={topic}>{topic}</option>)}</select><ChevronDown /></label><label>{x.message}<textarea name="message" rows="5" required placeholder={x.messagePlaceholder} /></label><button className="button button--navy" type="submit">{x.send} <ArrowRight size={17} /></button></form></Reveal>
+      <Reveal delay={120} className="contact-info"><Eyebrow>{x.quick}</Eyebrow><h2>{x.direct}</h2><div className="contact-info__card"><a href={contact.phoneHref}><span><Phone /></span><div><small>{x.call}</small><b>{contact.phoneDisplay}</b></div><ArrowUpRight size={18} /></a><a href={contact.whatsapp} target="_blank" rel="noreferrer"><span><MessageCircle /></span><div><small>{c.common.whatsapp}</small><b>{x.chat}</b></div><ArrowUpRight size={18} /></a><a href={'mailto:' + contact.email}><span><Mail /></span><div><small>{c.common.email}</small><b>{contact.email}</b></div><ArrowUpRight size={18} /></a></div><div className="service-area"><MapPin /><div><b>{x.come}</b><p>{x.area}</p></div></div><div className="map-embed"><iframe title="Standard Catering — Cairo service area" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221786.59583396408!2d31.18401!3d30.06263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14583fa60b21beeb%3A0x79dfb296e8423bba!2sCairo%2C%20Egypt!5e0!3m2!1sen!2seg!4v1234567890" width="100%" height="260" style={{border:0,display:'block'}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe></div><p className="contact-note">{x.note}</p></Reveal>
     </section>
   </>
 }
@@ -253,7 +266,7 @@ function NotFound() {
 }
 
 function AppRoutes() {
-  return <Layout><Suspense fallback={<div className="loading-fallback">Loading...</div>}><Routes><Route path="/" element={<Home />} /><Route path="/menu" element={<Menu />} /><Route path="/about" element={<About />} /><Route path="/contact" element={<Contact />} /><Route path="/order" element={<Order />} /><Route path="/order/success" element={<OrderSuccess />} /><Route path="*" element={<NotFound />} /></Routes></Suspense></Layout>
+  return <Layout><Suspense fallback={<div className="loading-fallback" role="status" aria-live="polite">Loading...</div>}><Routes><Route path="/" element={<Home />} /><Route path="/menu" element={<Menu />} /><Route path="/about" element={<About />} /><Route path="/contact" element={<Contact />} /><Route path="/order" element={<Order />} /><Route path="/order/success" element={<OrderSuccess />} /><Route path="/privacy" element={<PrivacyPolicy />} /><Route path="/terms" element={<Terms />} /><Route path="*" element={<NotFound />} /></Routes></Suspense><CookieBanner /></Layout>
 }
 
 function App() {
