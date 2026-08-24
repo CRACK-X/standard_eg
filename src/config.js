@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://standard-eg.web-hub-info-2026.workers.dev'
+export const SITE_URL = 'https://standard-eg.gold-rush.workers.dev'
 export const SITE_NAME = 'Standard Catering'
 
 // Per-route metadata shared by the prerender build and the client-side hook.

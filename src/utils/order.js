@@ -8,7 +8,6 @@ export const initialOrder = {
   name: '',
   phone: '',
   email: '',
-  contactMethod: 'whatsapp',
   notes: '',
   consent: false,
 }
@@ -37,7 +36,6 @@ export function readableOrder(order, c, key) {
   if (key === 'eventType') return c.order.eventTypes[order[key]] || order[key]
   if (key === 'guests') return c.order.guestRanges[order[key]] || order[key]
   if (key === 'budget') return c.order.budgets[order[key]] || order[key]
-  if (key === 'contactMethod') return c.common[order[key]] || order[key]
   if (key === 'services') return order.services.map(item => c.order.services[item] || c.packages[item]?.title || item).join('، ')
   return order[key]
 }

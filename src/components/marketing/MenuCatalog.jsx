@@ -51,12 +51,19 @@ export default function MenuCatalog() {
 
   return <section className="menu-catalog" aria-labelledby="menu-catalog-title">
     <Reveal>
-      <SectionIntro eyebrow={catalog.eyebrow} title={catalog.title} copy={catalog.copy} />
+      <SectionIntro centered eyebrow={catalog.eyebrow} title={catalog.title} copy={catalog.copy} />
+    </Reveal>
+    <Reveal>
+      <nav className="menu-catalog__nav" aria-label={catalog.eyebrow}>
+        {Object.entries(catalog.collections).map(([key, collection]) => (
+          <a key={key} href={`#${key}`}>{collection.title}</a>
+        ))}
+      </nav>
     </Reveal>
     <div className="menu-catalog__grid">
       {Object.entries(catalog.collections).map(([key, collection], index) => <Reveal key={key} delay={index * 85}>
-        <article className="menu-collection">
-          <img className="menu-collection__image" src={menuCollectionImages[key]} alt={collection.title} loading="lazy" width="600" height="400" />
+        <article className="menu-collection" id={key}>
+          <img className="menu-collection__image" src={menuCollectionImages[key]} alt={collection.title} loading="lazy" decoding="async" width="600" height="400" />
           <div className="menu-collection__body">
             <h3>{collection.title}</h3>
             <p>{collection.intro}</p>

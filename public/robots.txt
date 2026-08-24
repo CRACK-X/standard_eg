@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://standard-eg.web-hub-info-2026.workers.dev/sitemap.xml
+Sitemap: https://standard-eg.gold-rush.workers.dev/sitemap.xml

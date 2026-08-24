@@ -287,7 +287,6 @@ function StepBasics({ order, update, errors }) {
 function StepDetails({ order, update, errors }) {
   const { c } = useLocale()
   const d = c.order.details
-  const contactIcons = { phone: <Phone size={14} />, whatsapp: <MessageCircle size={14} />, email: <Mail size={14} /> }
   return <div className="step-content">
     <div className="step-intro">
       <p className="step-number">{d.number}</p>
@@ -309,15 +308,6 @@ function StepDetails({ order, update, errors }) {
         <span className="field-label"><Mail size={15} /> {d.email} <small>{c.common.optional}</small></span>
         <input type="email" value={order.email} onChange={e => update('email', e.target.value)} placeholder="you@example.com" />
       </label>
-      <fieldset className="form-grid__full contact-method-fieldset">
-        <legend>{d.contact}</legend>
-        <div className="radio-group">
-          {['phone', 'whatsapp', 'email'].map(method => <label key={method} className={order.contactMethod === method ? 'radio-pill radio-pill--active' : 'radio-pill'}>
-            <input type="radio" checked={order.contactMethod === method} onChange={() => update('contactMethod', method)} />
-            {contactIcons[method]} <span>{c.common[method]}</span>
-          </label>)}
-        </div>
-      </fieldset>
     </div>
     <label className="full-width notes-label">
       <span className="field-label">{d.notes} <small>{c.common.optional}</small></span>
@@ -339,7 +329,7 @@ function StepReview({ order, items, onEdit, update, errors }) {
     <div className="review-list">
       <ReviewGroup title={r.event} onEdit={() => onEdit(1)} rows={[[r.date, order.date || c.common.notChosen], [r.time, order.time || c.common.notChosen], [r.city, order.city || c.common.notChosen], [r.address, order.address || c.common.notChosen]]} />
       <ReviewGroup title={c.cart.reviewCartItems} onEdit={() => setIsCartOpen(true)} rows={items.map(item => [`${item.quantity}x ${item.name}`, item.note ? `${c.cart.notePrefix} ${item.note}` : '-'])} />
-      <ReviewGroup title={r.details} onEdit={() => onEdit(2)} rows={[[r.name, order.name || c.common.notChosen], [r.phone, order.phone || c.common.notChosen], [r.contact, readableOrder(order, c, 'contactMethod')]]} />
+      <ReviewGroup title={r.details} onEdit={() => onEdit(2)} rows={[[r.name, order.name || c.common.notChosen], [r.phone, order.phone || c.common.notChosen]]} />
     </div>
     <label className="consent"><input type="checkbox" checked={order.consent} onChange={e => update('consent', e.target.checked)} /><span>{r.consent}</span></label>
     {errors.consent && <Error>{errors.consent}</Error>}
