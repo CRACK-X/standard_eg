@@ -37,8 +37,11 @@
 .map-embed { margin-top: 2rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-border); }
 
 /* FAQs */
-.faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
-.faq-item h4 { font-size: 1.1rem; color: var(--navy); margin-bottom: 0.5rem; }
+.faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem; }
+@media (max-width: 700px) { .faq-grid { grid-template-columns: 1fr; } }
+.faq-item h3 { font-size: 1.05rem; color: var(--navy); margin-bottom: 0.5rem; }
+.faq-item { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
+.faq-item p { font-size: .88rem; }
 .faq-item p { color: var(--gray); line-height: 1.6; }
 
 /* Footer Legal */
@@ -263,9 +266,9 @@ em { font-weight: inherit; color: var(--gold); }
 .occasion-grid > * { display: flex; flex-direction: column; }
 .occasion { flex: 1; justify-content: center; text-align: center; border-right: 1px solid var(--line); padding: 15px 24px; }
 .occasion:first-child { border-left: 1px solid var(--line); }
-.occasion > span { width: 53px; height: 53px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--gold-light); color: var(--navy); }
+.occasion > span:first-child { width: 53px; height: 53px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--gold-light); color: var(--navy); flex-shrink: 0; }
 .occasion h3 { margin: 16px 0 0; font-size: 1.14rem; }
-.occasion .gold-rule { margin: 16px auto 0; width: 34px; }
+.occasion .gold-rule { margin: 16px auto 0; width: 34px; height: 2px; border-radius: 999px; }
 .about-gallery { padding: 108px 0 116px; }
 .about-gallery__heading { display: flex; justify-content: flex-end; margin-bottom: 39px; }
 .about-gallery__heading p { width: min(100%, 385px); color: var(--navy); font: 600 clamp(1.75rem, 3.1vw, 2.65rem)/1.14 var(--serif); letter-spacing: -.04em; margin: 0; }
