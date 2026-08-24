@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
-import { X, Plus, Minus, Trash2, ArrowRight, UtensilsCrossed } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLocale } from '../../utils/i18n';
-import { menuCollectionImages } from '../../utils/siteData';
 
 export default function CartDrawer() {
   const { items, isCartOpen, setIsCartOpen, updateQuantity, updateNote, removeFromCart } = useCart();
@@ -54,13 +53,6 @@ export default function CartDrawer() {
             <ul className="cart-drawer__items">
               {items.map((item) => (
                 <li key={item.id + item.note} className="cart-item">
-                  {menuCollectionImages[item.collection] ? (
-                    <img src={menuCollectionImages[item.collection]} alt="" className="cart-item__image" loading="lazy" width="80" height="80" />
-                  ) : (
-                    <div className="cart-item__image cart-item__image--placeholder" aria-hidden="true">
-                      <UtensilsCrossed size={22} />
-                    </div>
-                  )}
                   <div className="cart-item__details">
                     <h3>{item.name}</h3>
 

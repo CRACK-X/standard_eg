@@ -813,12 +813,6 @@ html[lang="ar"] .logo { direction: ltr; }
   padding-bottom: 20px;
   border-bottom: 1px solid var(--line);
 }
-.cart-item__image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: var(--radius);
-}
 .cart-item__details {
   flex: 1;
   display: flex;
@@ -1010,5 +1004,18 @@ html[lang="ar"] .logo { direction: ltr; }
 .full-width-btn { width: 100%; justify-content: center; }
 .cart-item__remove { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid transparent; transition: background-color .2s ease; }
 .cart-item__remove:hover { background: #fdecea; }
-.cart-item__image--placeholder { display: flex; align-items: center; justify-content: center; background: var(--gold-light); color: var(--navy); flex-shrink: 0; }
 .cart-item__note input { padding: 8px 10px; border-radius: 8px; background: #fffdf8; }
+
+/* ---- Tap-highlight fix + hardened control buttons ---- */
+html { -webkit-tap-highlight-color: transparent; }
+.quantity-selector button,
+.cart-item__remove {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+.quantity-selector button:active:not(:disabled) { background: var(--gold); color: var(--navy); }
+.cart-item__remove:active { background: #f8d7da; }
