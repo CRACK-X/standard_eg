@@ -3,6 +3,7 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
+  X-XSS-Protection: 0
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
@@ -30,3 +31,25 @@
 
 /site.webmanifest
   Cache-Control: public, max-age=86400
+
+/security.txt
+  Cache-Control: max-age=3600
+
+/.well-known/security.txt
+  Cache-Control: max-age=3600
+
+/order
+  Cache-Control: no-store
+  Pragma: no-cache
+
+/order/
+  Cache-Control: no-store
+  Pragma: no-cache
+
+/order/success
+  Cache-Control: no-store
+  Pragma: no-cache
+
+/contact
+  Cache-Control: no-store
+  Pragma: no-cache

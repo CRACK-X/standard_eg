@@ -1,0 +1,4 @@
+Contact: mailto:Standardcatering777@gmail.com
+Expires: 2027-08-24T00:00:00Z
+Preferred-Languages: en, ar
+Canonical: https://standard-eg.gold-rush.workers.dev/.well-known/security.txt
