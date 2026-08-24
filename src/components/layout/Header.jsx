@@ -10,7 +10,6 @@ export default function Header() {
   const { items, setIsCartOpen } = useCart()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 35)
     onScroll()
@@ -25,20 +24,30 @@ export default function Header() {
     <div className="shell header__inner">
       <Logo light />
       <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={c.nav.menuToggle} aria-expanded={menuOpen}>{menuOpen ? <X /> : <MenuIcon />}</button>
+      <div className={`mobile-nav-backdrop ${menuOpen ? 'mobile-nav-backdrop--open' : ''}`} onClick={closeMenu} aria-hidden="true" />
       <nav className={menuOpen ? 'header-nav header-nav--open' : 'header-nav'} aria-label={c.nav.menuToggle}>
-        {links.map(([label, to]) => <NavLink key={to} to={to} end={to === '/'} onClick={closeMenu}>{label}</NavLink>)}
-        <button className="language-toggle" onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')} aria-label={c.nav.toggle}>{c.nav.toggle}</button>
-        <button 
-          className="cart-toggle" 
-          onClick={() => { closeMenu(); setIsCartOpen(true); }}
-          aria-label="Open cart"
-        >
-          <ShoppingCart size={20} />
-          {items.length > 0 && (
-            <span className="cart-badge">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
-          )}
-        </button>
-        <Link className="button button--gold header__cta" to="/order" onClick={closeMenu}>{c.nav.order} <ArrowRight size={16} /></Link>
+        <div className="header-nav__close-mobile">
+          <Logo light />
+          <button onClick={closeMenu} aria-label="Close menu"><X size={28} /></button>
+        </div>
+        <div className="header-nav__links">
+          {links.map(([label, to]) => <NavLink key={to} to={to} end={to === '/'} onClick={closeMenu}>{label}</NavLink>)}
+        </div>
+        <div className="header-nav__bottom">
+          <button className="language-toggle" onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')} aria-label={c.nav.toggle}>{c.nav.toggle}</button>
+          <button 
+            className="cart-toggle" 
+            onClick={() => { closeMenu(); setIsCartOpen(true); }}
+            aria-label="Open cart"
+          >
+            <ShoppingCart size={20} />
+            <span className="cart-toggle__label-mobile">{c.cart.cartLabel}</span>
+            {items.length > 0 && (
+              <span className="cart-badge">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            )}
+          </button>
+          <Link className="button button--gold header__cta" to="/order" onClick={closeMenu}>{c.nav.order} <ArrowRight size={16} /></Link>
+        </div>
       </nav>
     </div>
   </header>

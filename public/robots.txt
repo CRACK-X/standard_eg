@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://standardcatering.eg/sitemap.xml
+Sitemap: https://standard-eg.web-hub-info-2026.workers.dev/sitemap.xml

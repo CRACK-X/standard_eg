@@ -1,26 +1,45 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { SITE_URL, SITE_NAME, ROUTE_META } from '../config'
+import { useLocale } from './i18n'
 
-const PAGE_META = {
-  'Catering crafted for every celebration': { desc: 'Mobile catering, food trucks and live food stations for weddings, corporate events and celebrations across Cairo, Giza and Alexandria.', path: '/' },
-  'Menu & Packages': { desc: 'Browse Standard Catering packages — weddings, corporate, birthdays, food trucks and dessert stations. Fully tailored to your guest list and vision.', path: '/menu' },
-  'Our story': { desc: 'Learn how Standard Catering brings mobile food experiences to events across Egypt — from food trucks to full-scale wedding buffets.', path: '/about' },
-  'Contact us': { desc: 'Get in touch with Standard Catering. Send a message, call or WhatsApp us — we serve Cairo, Giza and Alexandria.', path: '/contact' },
-  'Start your order': { desc: 'Request a catering quote in minutes. No commitment — just tell us about your event and we will tailor a package for you.', path: '/order' },
-  'Request received': { desc: 'Your Standard Catering request has been received. Our team will be in touch within 24 hours.', path: '/order/success' },
-  'Page not found': { desc: 'The page you are looking for does not exist. Head back to Standard Catering.', path: '/' },
-  'Privacy Policy': { desc: 'Read the Standard Catering privacy policy — how we collect, use and protect your data.', path: '/privacy' },
-  'Terms & Conditions': { desc: 'Standard Catering booking terms, cancellation policy, advance notice requirements and governing law.', path: '/terms' },
+function setMeta(selector, attr, value) {
+  let el = document.head.querySelector(selector)
+  if (!el) {
+    el = document.createElement('meta')
+    document.head.appendChild(el)
+  }
+  el.setAttribute(attr, value)
 }
 
-export function usePageTitle(title) {
+export function usePageMeta() {
+  const { pathname } = useLocation()
+  const { language } = useLocale()
+
   useEffect(() => {
-    document.title = title + ' | Standard Catering'
-    const meta = PAGE_META[title]
-    if (meta) {
-      let desc = document.querySelector('meta[name="description"]')
-      if (desc) desc.setAttribute('content', meta.desc)
-      let can = document.querySelector('link[rel="canonical"]')
-      if (can) can.setAttribute('href', 'https://standardcatering.eg' + meta.path)
+    const path = pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+    const meta = ROUTE_META[path] || ROUTE_META['404']
+    const locale = meta[language] ? language : 'en'
+    const { title, description, noindex } = meta[locale]
+    const url = path === '/' ? SITE_URL + '/' : SITE_URL + path
+    const fullTitle = `${title} | ${SITE_NAME}`
+
+    document.title = fullTitle
+    setMeta('meta[name="description"]', 'content', description)
+    setMeta('meta[name="robots"]', 'content', noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+
+    let canonical = document.head.querySelector('link[rel="canonical"]')
+    if (!canonical) {
+      canonical = document.createElement('link')
+      canonical.rel = 'canonical'
+      document.head.appendChild(canonical)
     }
-  }, [title])
+    canonical.href = url
+
+    setMeta('meta[property="og:title"]', 'content', fullTitle)
+    setMeta('meta[property="og:description"]', 'content', description)
+    setMeta('meta[property="og:url"]', 'content', url)
+    setMeta('meta[name="twitter:title"]', 'content', fullTitle)
+    setMeta('meta[name="twitter:description"]', 'content', description)
+  }, [pathname, language])
 }

@@ -64,3 +64,28 @@ export function buildOrderWhatsAppUrl(order, items, c, language, referenceNumber
 
   return base + contact.whatsappNumber + sep + 'text=' + encodeURIComponent(message)
 }
+
+export function buildContactWhatsAppUrl(fields, c) {
+  const topic = fields.get('topic') || ''
+  const line = (label, value, optional = false) => {
+    const v = String(value || '').trim()
+    if (!v && optional) return null
+    return '• ' + label + ': ' + (v || c.common.notChosen)
+  }
+  const message = [
+    '*NEW ENQUIRY — WEBSITE*',
+    '',
+    line(c.contact.name, fields.get('name')),
+    line(c.contact.phone, fields.get('phone')),
+    line(c.common.email, fields.get('email'), true),
+    line(c.contact.topic, topic),
+    '',
+    c.contact.message + ':',
+    String(fields.get('message') || '').trim() || '-',
+  ].filter(Boolean).join('\n')
+
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '')
+  const base = isMobile ? 'whatsapp://send?phone=' : 'https://wa.me/'
+  const sep = isMobile ? '&' : '?'
+  return base + contact.whatsappNumber + sep + 'text=' + encodeURIComponent(message)
+}

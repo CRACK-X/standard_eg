@@ -1,10 +1,10 @@
 import { useLocale } from "../utils/i18n"
-import { usePageTitle } from "../utils/usePageTitle"
+import { usePageMeta } from "../utils/usePageTitle"
 
 export default function Terms() {
   const { c } = useLocale()
   const l = c.legal.p
-  usePageTitle(c.legal.termsTitle)
+  usePageMeta()
   return (
     <main className="legal-page shell">
       <h1>{c.legal.termsTitle}</h1>

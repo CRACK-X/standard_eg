@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import amazonLogo from '../../assets/logos/amazon.svg'
 import vodafoneLogo from '../../assets/logos/vodafone.svg'
@@ -23,116 +23,31 @@ import fueUniversityLogo from '../../assets/logos/fue-university.png'
 import nahdaUniversityLogo from '../../assets/logos/nahda-university.png'
 
 const trustedBrands = [
-  {
-    name: 'Amazon',
-    variant: 'amazon',
-    imageUrl: amazonLogo,
-  },
-  {
-    name: 'Vodafone',
-    variant: 'vodafone',
-    imageUrl: vodafoneLogo,
-  },
-  {
-    name: 'Teleperformance',
-    variant: 'teleperformance',
-    imageUrl: teleperformanceLogo,
-  },
-  {
-    name: 'P&G',
-    variant: 'procter-gamble',
-    imageUrl: pgLogo,
-  },
-  {
-    name: 'Elaraby',
-    variant: 'elaraby',
-    imageUrl: elarabyLogo,
-  },
-  {
-    name: 'Elsewedy Electric',
-    variant: 'elsewedy',
-    imageUrl: elsewedyLogo,
-  },
-  {
-    name: 'GB Ghabbour',
-    variant: 'ghabbour',
-    imageUrl: gbCorpLogo,
-  },
-  {
-    name: 'SIBES',
-    variant: 'sibes',
-    imageUrl: sipesLogo,
-  },
-  {
-    name: 'Jotun',
-    variant: 'jotun',
-    imageUrl: jotunLogo,
-  },
-  {
-    name: 'Coca-Cola',
-    variant: 'cocacola',
-    imageUrl: cocacolaLogo,
-  },
-  {
-    name: 'Silicon Valley School',
-    variant: 'silicon-valley',
-    imageUrl: siliconValleySchoolLogo,
-  },
-  {
-    name: 'Genesis School',
-    variant: 'genesis',
-    imageUrl: genesisSchoolLogo,
-  },
-  {
-    name: 'El Manhal School',
-    variant: 'elmanhal',
-    imageUrl: almanhalSchoolLogo,
-  },
-  {
-    name: 'Rajac School',
-    variant: 'rajac',
-    imageUrl: rajacSchoolLogo,
-  },
-  {
-    name: 'El Kenana School',
-    variant: 'elkenana',
-    imageUrl: kenanaSchoolLogo,
-  },
-  {
-    name: 'RAN School',
-    variant: 'ran',
-    imageUrl: rahnSchoolLogo,
-  },
-  {
-    name: 'Future School',
-    variant: 'future-school',
-    imageUrl: futureSchoolLogo,
-  },
-  {
-    name: 'MSA University',
-    variant: 'msa',
-    imageUrl: msaUniversityLogo,
-  },
-  {
-    name: 'Benha University',
-    variant: 'benha',
-    imageUrl: benhaUniversityLogo,
-  },
-  {
-    name: 'Future University',
-    variant: 'future-university',
-    imageUrl: fueUniversityLogo,
-  },
-  {
-    name: 'El Nahda University',
-    variant: 'elnahda',
-    imageUrl: nahdaUniversityLogo,
-  },
+  { name: 'Amazon', variant: 'amazon', imageUrl: amazonLogo },
+  { name: 'Vodafone', variant: 'vodafone', imageUrl: vodafoneLogo },
+  { name: 'Teleperformance', variant: 'teleperformance', imageUrl: teleperformanceLogo },
+  { name: 'P&G', variant: 'procter-gamble', imageUrl: pgLogo },
+  { name: 'Elaraby', variant: 'elaraby', imageUrl: elarabyLogo },
+  { name: 'Elsewedy Electric', variant: 'elsewedy', imageUrl: elsewedyLogo },
+  { name: 'GB Ghabbour', variant: 'ghabbour', imageUrl: gbCorpLogo },
+  { name: 'SIBES', variant: 'sibes', imageUrl: sipesLogo },
+  { name: 'Jotun', variant: 'jotun', imageUrl: jotunLogo },
+  { name: 'Coca-Cola', variant: 'cocacola', imageUrl: cocacolaLogo },
+  { name: 'Silicon Valley School', variant: 'silicon-valley', imageUrl: siliconValleySchoolLogo },
+  { name: 'Genesis School', variant: 'genesis', imageUrl: genesisSchoolLogo },
+  { name: 'El Manhal School', variant: 'elmanhal', imageUrl: almanhalSchoolLogo },
+  { name: 'Rajac School', variant: 'rajac', imageUrl: rajacSchoolLogo },
+  { name: 'El Kenana School', variant: 'elkenana', imageUrl: kenanaSchoolLogo },
+  { name: 'RAN School', variant: 'ran', imageUrl: rahnSchoolLogo },
+  { name: 'Future School', variant: 'future-school', imageUrl: futureSchoolLogo },
+  { name: 'MSA University', variant: 'msa', imageUrl: msaUniversityLogo },
+  { name: 'Benha University', variant: 'benha', imageUrl: benhaUniversityLogo },
+  { name: 'Future University', variant: 'future-university', imageUrl: fueUniversityLogo },
+  { name: 'El Nahda University', variant: 'elnahda', imageUrl: nahdaUniversityLogo },
 ]
 
 function BrandItem({ brand, hidden = false }) {
   const [imgFailed, setImgFailed] = useState(false)
-
   return (
     <div
       className={`trust-brand trust-brand--${brand.variant}`}
@@ -170,9 +85,28 @@ function BrandSet({ hidden = false }) {
 }
 
 export default function TrustMarquee({ label }) {
+  const ref = useRef(null)
+  const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setPlaying(entry.isIntersecting),
+      { threshold: 0.1 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div className="trust-marquee" aria-label={label}>
-      <div className="trust-marquee__track">
+    <div
+      ref={ref}
+      className="trust-marquee"
+      aria-label={label}
+      data-playing={playing}
+    >
+      <div className="trust-marquee__track" style={{ animationPlayState: playing ? 'running' : 'paused' }}>
         <BrandSet />
         <BrandSet hidden />
       </div>

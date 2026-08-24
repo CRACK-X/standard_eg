@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 
 export default function Reveal({ children, className = '', delay = 0 }) {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(() => typeof IntersectionObserver === 'undefined')
   const ref = useRef(null)
 
   useEffect(() => {
+    if (visible) return undefined
     const node = ref.current
-    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!node || typeof IntersectionObserver === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setVisible(true)
       return undefined
     }
@@ -20,7 +21,7 @@ export default function Reveal({ children, className = '', delay = 0 }) {
 
     observer.observe(node)
     return () => observer.disconnect()
-  }, [])
+  }, [visible])
 
   return <div ref={ref} className={'reveal ' + (visible ? 'reveal--visible ' : '') + className} style={{ '--reveal-delay': delay + 'ms' }}>{children}</div>
 }

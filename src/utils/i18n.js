@@ -1,10 +1,11 @@
 import { createContext, createElement, useContext, useEffect, useState } from 'react'
 
-const content = {
+export const content = {
   en: {
     nav: { home: 'Home', menu: 'Menu & Packages', story: 'Our Story', contact: 'Contact', order: 'Start your order', toggle: 'العربية', menuToggle: 'Toggle navigation' },
     footer: { tagline: 'Casual catering for every occasion. We bring the feast to you.', explore: 'Explore', talk: 'Talk to us', whatsapp: 'WhatsApp us', area: 'Cairo, Giza & Alexandria', mobile: 'Mobile catering across Egypt', rights: 'All rights reserved.', made: 'Web hub for integrated Software soltions', privacy: 'Privacy Policy', terms: 'Terms & Conditions' },
     common: { requestThis: 'Request this', optional: 'Optional', edit: 'Edit', back: 'Back', continue: 'Continue', notChosen: 'Not chosen yet', whatsapp: 'WhatsApp', email: 'Email', phone: 'Phone call' },
+    cart: { title: 'Order Cart', open: 'Open cart', close: 'Close cart', view: 'View Cart', cartLabel: 'Cart', empty: 'Your cart is empty.', emptyShort: 'Empty', browse: 'Browse Menu', checkout: 'Checkout', addToCart: 'Add to Cart', added: 'Added', addNote: 'Add a note (optional)...', note: 'Note (optional)', notePlaceholder: 'e.g. no onions', decrease: 'Decrease quantity', increase: 'Increase quantity', specialRequests: 'Special requests', remove: 'Remove', itemOne: 'item', itemMany: 'items', reviewCartItems: 'Cart Items', notePrefix: 'Note:' },
     home: {
       pageTitle: 'Catering crafted for every celebration',
       eyebrow: 'Mobile event catering · Egypt',
@@ -58,7 +59,7 @@ const content = {
     contact: {
       pageTitle: 'Contact us', eyebrow: 'We would love to hear from you', title: 'Let’s start a', accent: 'conversation.',
       copy: 'Need to ask a question or have a particular idea in mind? Send a note, give us a call, or say hello on WhatsApp.',
-      formEyebrow: 'Send a message', formTitle: 'How can we help?', sent: 'Thanks — your note is on its way. We’ll be in touch soon.',
+      formEyebrow: 'Send a message', formTitle: 'How can we help?', sent: 'Opening WhatsApp with your message — just press send there and we’ll take it from here.',
       name: 'Your name', phone: 'Phone number', email: 'Email address', topic: 'What can we help with?', message: 'Your message',
       topics: ['General inquiry', 'Menu question', 'Corporate partnership', 'Feedback', 'Other'],
       messagePlaceholder: 'Tell us a little more...', send: 'Send your message',
@@ -156,6 +157,7 @@ const content = {
     nav: { home: 'الرئيسية', menu: 'الباقات والقائمة', story: 'قصتنا', contact: 'تواصل معنا', order: 'ابدأ طلبك', toggle: 'EN', menuToggle: 'فتح قائمة التنقل' },
     footer: { tagline: 'ضيافة مميزة لكل مناسبة. نأتي بالوليمة إليك.', explore: 'استكشف', talk: 'تحدث معنا', whatsapp: 'راسلنا عبر واتساب', area: 'القاهرة والجيزة والإسكندرية', mobile: 'ضيافة متنقلة في أنحاء مصر', rights: 'جميع الحقوق محفوظة.', made: 'Web hub for integrated Software soltions', privacy: 'سياسة الخصوصية', terms: 'الشروط والأحكام' },
     common: { requestThis: 'اطلب هذه الباقة', optional: 'اختياري', edit: 'تعديل', back: 'رجوع', continue: 'متابعة', notChosen: 'لم يتم الاختيار بعد', whatsapp: 'واتساب', email: 'البريد الإلكتروني', phone: 'مكالمة هاتفية' },
+    cart: { title: 'سلة الطلب', open: 'فتح السلة', close: 'إغلاق السلة', view: 'عرض السلة', cartLabel: 'السلة', empty: 'سلتك فارغة.', emptyShort: 'فارغة', browse: 'تصفح المنيو', checkout: 'إتمام الطلب', addToCart: 'أضف إلى السلة', added: 'تمت الإضافة', addNote: 'أضف ملاحظة (اختياري)...', note: 'ملاحظة (اختياري)', notePlaceholder: 'مثال: بدون بصل', decrease: 'تقليل الكمية', increase: 'زيادة الكمية', specialRequests: 'طلبات خاصة', remove: 'إزالة', itemOne: 'عنصر', itemMany: 'عناصر', reviewCartItems: 'عناصر السلة', notePrefix: 'ملاحظة:' },
     home: {
       pageTitle: 'ضيافة مصممة لكل احتفال',
       eyebrow: 'ضيافة فعاليات متنقلة · مصر',
@@ -209,7 +211,7 @@ const content = {
     contact: {
       pageTitle: 'تواصل معنا', eyebrow: 'يسعدنا أن نسمع منك', title: 'لنبدأ', accent: 'حديثاً.',
       copy: 'هل لديك سؤال أو فكرة محددة؟ أرسل لنا رسالة، اتصل بنا أو قل مرحباً عبر واتساب.',
-      formEyebrow: 'أرسل رسالة', formTitle: 'كيف يمكننا مساعدتك؟', sent: 'شكراً — وصلت رسالتك وسنتواصل معك قريباً.',
+      formEyebrow: 'أرسل رسالة', formTitle: 'كيف يمكننا مساعدتك؟', sent: 'جارٍ فتح واتساب برسالتك — اضغط إرسال هناك وسنتولى الباقي.',
       name: 'الاسم', phone: 'رقم الهاتف', email: 'البريد الإلكتروني', topic: 'كيف يمكننا مساعدتك؟', message: 'رسالتك',
       topics: ['استفسار عام', 'سؤال عن القائمة', 'شراكة مع شركة', 'ملاحظة', 'أمر آخر'],
       messagePlaceholder: 'أخبرنا بالمزيد...', send: 'أرسل رسالتك',
