@@ -1,8 +1,13 @@
 import { contact } from './siteData'
-import { readableOrder } from './order'
+
+// Collapse control characters so user-typed values can never forge extra
+// message lines (newlines render as line breaks inside a WhatsApp message).
+function clean(value) {
+  return String(value ?? '').replace(/[\r\n\t\u202A-\u202E\u200B-\u200F]+/g, ' ').trim()
+}
 
 function englishMessage(order, items, c, referenceNumber) {
-  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (Note: ${item.note})` : ''}`).join('\n')
+  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (Note: ${clean(item.note)})` : ''}`).join('\n')
   return [
     '*NEW CATERING REQUEST*',
     'Reference: ' + referenceNumber,
@@ -10,24 +15,24 @@ function englishMessage(order, items, c, referenceNumber) {
     '*DELIVERY DETAILS*',
     '• Date: ' + (order.date || c.common.notChosen),
     '• Time: ' + (order.time || c.common.notChosen),
-    '• City: ' + (order.city || c.common.notChosen),
-    '• Address: ' + (order.address || c.common.notChosen),
+    '• City: ' + (clean(order.city) || c.common.notChosen),
+    '• Address: ' + (clean(order.address) || c.common.notChosen),
     '',
     '*CART ITEMS*',
     cartText || 'Empty Cart',
     '',
     '*CONTACT DETAILS*',
-    '• Name: ' + (order.name || c.common.notChosen),
-    '• Phone: ' + (order.phone || c.common.notChosen),
-    '• Email: ' + (order.email || c.common.notChosen),
+    '• Name: ' + (clean(order.name) || c.common.notChosen),
+    '• Phone: ' + (clean(order.phone) || c.common.notChosen),
+    '• Email: ' + (clean(order.email) || c.common.notChosen),
     '',
     '*ADDITIONAL NOTES*',
-    order.notes?.trim() || 'None provided',
+    clean(order.notes) || 'None provided',
   ].join('\n')
 }
 
 function arabicMessage(order, items, c, referenceNumber) {
-  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (ملاحظة: ${item.note})` : ''}`).join('\n')
+  const cartText = items.map(item => `• ${item.quantity}x ${item.name}${item.note ? ` (ملاحظة: ${clean(item.note)})` : ''}`).join('\n')
   return [
     '*طلب ضيافة جديد*',
     'رقم الطلب: ' + referenceNumber,
@@ -35,19 +40,19 @@ function arabicMessage(order, items, c, referenceNumber) {
     '*تفاصيل التوصيل*',
     '• التاريخ: ' + (order.date || c.common.notChosen),
     '• الوقت: ' + (order.time || c.common.notChosen),
-    '• المدينة: ' + (order.city || c.common.notChosen),
-    '• العنوان: ' + (order.address || c.common.notChosen),
+    '• المدينة: ' + (clean(order.city) || c.common.notChosen),
+    '• العنوان: ' + (clean(order.address) || c.common.notChosen),
     '',
     '*عناصر السلة*',
     cartText || 'سلة فارغة',
     '',
     '*بيانات التواصل*',
-    '• الاسم: ' + (order.name || c.common.notChosen),
-    '• الهاتف: ' + (order.phone || c.common.notChosen),
-    '• البريد الإلكتروني: ' + (order.email || c.common.notChosen),
+    '• الاسم: ' + (clean(order.name) || c.common.notChosen),
+    '• الهاتف: ' + (clean(order.phone) || c.common.notChosen),
+    '• البريد الإلكتروني: ' + (clean(order.email) || c.common.notChosen),
     '',
     '*ملاحظات إضافية*',
-    order.notes?.trim() || 'لا توجد ملاحظات',
+    clean(order.notes) || 'لا توجد ملاحظات',
   ].join('\n')
 }
 
@@ -63,15 +68,16 @@ export function buildOrderWhatsAppUrl(order, items, c, language, referenceNumber
   return base + contact.whatsappNumber + sep + 'text=' + encodeURIComponent(message)
 }
 
-export function buildContactWhatsAppUrl(fields, c) {
+export function buildContactWhatsAppUrl(fields, c, language) {
   const topic = fields.get('topic') || ''
+  const header = language === 'ar' ? '*استفسار جديد — الموقع*' : '*NEW ENQUIRY — WEBSITE*'
   const line = (label, value, optional = false) => {
-    const v = String(value || '').trim()
+    const v = clean(value)
     if (!v && optional) return null
     return '• ' + label + ': ' + (v || c.common.notChosen)
   }
   const message = [
-    '*NEW ENQUIRY — WEBSITE*',
+    header,
     '',
     line(c.contact.name, fields.get('name')),
     line(c.contact.phone, fields.get('phone')),
@@ -79,7 +85,7 @@ export function buildContactWhatsAppUrl(fields, c) {
     line(c.contact.topic, topic),
     '',
     c.contact.message + ':',
-    String(fields.get('message') || '').trim() || '-',
+    clean(fields.get('message')) || '-',
   ].filter(Boolean).join('\n')
 
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '')

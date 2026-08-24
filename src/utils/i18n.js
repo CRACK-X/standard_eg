@@ -3,7 +3,7 @@ import { createContext, createElement, useContext, useEffect, useState } from 'r
 export const content = {
   en: {
     nav: { home: 'Home', menu: 'Menu & Packages', story: 'Our Story', contact: 'Contact', order: 'Start your order', toggle: 'العربية', menuToggle: 'Toggle navigation' },
-    footer: { tagline: 'Casual catering for every occasion. We bring the feast to you.', explore: 'Explore', talk: 'Talk to us', whatsapp: 'WhatsApp us', area: 'Cairo, Giza & Alexandria', mobile: 'Mobile catering across Egypt', rights: 'All rights reserved.', made: 'Web hub for integrated Software soltions', privacy: 'Privacy Policy', terms: 'Terms & Conditions' },
+    footer: { tagline: 'Casual catering for every occasion. We bring the feast to you.', explore: 'Explore', talk: 'Talk to us', whatsapp: 'WhatsApp us', area: 'Cairo, Giza & Alexandria', mobile: 'Mobile catering across Egypt', rights: 'All rights reserved.', made: 'Web hub for integrated Software solutions', privacy: 'Privacy Policy', terms: 'Terms & Conditions' },
     common: { requestThis: 'Request this', optional: 'Optional', edit: 'Edit', back: 'Back', continue: 'Continue', notChosen: 'Not chosen yet', whatsapp: 'WhatsApp', email: 'Email', phone: 'Phone call' },
     cart: { title: 'Order Cart', open: 'Open cart', close: 'Close cart', view: 'View Cart', cartLabel: 'Cart', empty: 'Your cart is empty.', emptyShort: 'Empty', browse: 'Browse Menu', checkout: 'Checkout', addToCart: 'Add to Cart', added: 'Added', addNote: 'Add a note (optional)...', note: 'Note (optional)', notePlaceholder: 'e.g. no onions', decrease: 'Decrease quantity', increase: 'Increase quantity', specialRequests: 'Special requests', remove: 'Remove', itemOne: 'item', itemMany: 'items', reviewCartItems: 'Cart Items', notePrefix: 'Note:' },
     home: {
@@ -38,14 +38,6 @@ export const content = {
       addonsEyebrow: 'Make it yours', addonsTitle: 'A little extra never hurts.',
       addons: ['Dessert bar', 'Drinks station', 'Popcorn cart', 'Fries cart', 'Live cooking', 'Custom branding'],
     },
-    packages: {
-      'classic-burger': { title: 'Classic Burger', category: 'Mains', description: 'Juicy beef patty with fresh lettuce, tomato, and our signature sauce.', features: ['Freshly grilled', 'Includes cheese', 'Served hot'] },
-      'margherita-pizza': { title: 'Margherita Pizza', category: 'Mains', description: 'Wood-fired pizza with San Marzano tomatoes, fresh mozzarella, and basil.', features: ['Wood-fired oven', 'Vegetarian', 'Crispy crust'] },
-      'crispy-fries': { title: 'Crispy Fries', category: 'Sides', description: 'Golden, crispy potato fries served with a side of ketchup and mayo.', features: ['Perfectly salted', 'Crispy exterior', 'Fluffy interior'] },
-      'sweet-waffle': { title: 'Sweet Waffle', category: 'Desserts', description: 'Warm Belgian waffle with powdered sugar, maple syrup, and whipped cream.', features: ['Freshly made', 'Warm dessert', 'Custom toppings'] },
-      'ice-cream-scoops': { title: 'Ice Cream Scoops', category: 'Desserts', description: 'Rich and creamy ice cream served in a cup or cone. Various flavors available.', features: ['Multiple flavors', 'Refreshing', 'Great for kids'] },
-      'fresh-juice': { title: 'Fresh Juice', category: 'Drinks', description: 'Freshly squeezed seasonal fruit juice with no added sugar.', features: ['100% natural', 'Chilled', 'Healthy option'] },
-    },
     about: {
       pageTitle: 'Our story', eyebrow: 'More than a meal', title: 'From food trucks to', accent: 'full-scale celebrations.',
       copy: 'Standard is casual catering with a little more heart — designed to make gathering easier, warmer and far more delicious.',
@@ -65,7 +57,6 @@ export const content = {
       messagePlaceholder: 'Tell us a little more...', send: 'Send your message',
       quick: 'Prefer a quicker chat?', direct: 'Reach us directly.', call: 'Call us', chat: 'Chat with our team',
       come: 'We come to you.', area: 'Serving Cairo, Giza & Alexandria. Planning something elsewhere? Just ask.',
-      note: 'Contact details are placeholder values pending client confirmation.',
     },
     order: {
       pageTitle: 'Start your order', eyebrow: 'A few easy steps', title: 'Tell us about your', accent: 'celebration.',
@@ -155,7 +146,7 @@ export const content = {
   },
   ar: {
     nav: { home: 'الرئيسية', menu: 'الباقات والقائمة', story: 'قصتنا', contact: 'تواصل معنا', order: 'ابدأ طلبك', toggle: 'EN', menuToggle: 'فتح قائمة التنقل' },
-    footer: { tagline: 'ضيافة مميزة لكل مناسبة. نأتي بالوليمة إليك.', explore: 'استكشف', talk: 'تحدث معنا', whatsapp: 'راسلنا عبر واتساب', area: 'القاهرة والجيزة والإسكندرية', mobile: 'ضيافة متنقلة في أنحاء مصر', rights: 'جميع الحقوق محفوظة.', made: 'Web hub for integrated Software soltions', privacy: 'سياسة الخصوصية', terms: 'الشروط والأحكام' },
+    footer: { tagline: 'ضيافة مميزة لكل مناسبة. نأتي بالوليمة إليك.', explore: 'استكشف', talk: 'تحدث معنا', whatsapp: 'راسلنا عبر واتساب', area: 'القاهرة والجيزة والإسكندرية', mobile: 'ضيافة متنقلة في أنحاء مصر', rights: 'جميع الحقوق محفوظة.', made: 'Web hub for integrated Software solutions', privacy: 'سياسة الخصوصية', terms: 'الشروط والأحكام' },
     common: { requestThis: 'اطلب هذه الباقة', optional: 'اختياري', edit: 'تعديل', back: 'رجوع', continue: 'متابعة', notChosen: 'لم يتم الاختيار بعد', whatsapp: 'واتساب', email: 'البريد الإلكتروني', phone: 'مكالمة هاتفية' },
     cart: { title: 'سلة الطلب', open: 'فتح السلة', close: 'إغلاق السلة', view: 'عرض السلة', cartLabel: 'السلة', empty: 'سلتك فارغة.', emptyShort: 'فارغة', browse: 'تصفح المنيو', checkout: 'إتمام الطلب', addToCart: 'أضف إلى السلة', added: 'تمت الإضافة', addNote: 'أضف ملاحظة (اختياري)...', note: 'ملاحظة (اختياري)', notePlaceholder: 'مثال: بدون بصل', decrease: 'تقليل الكمية', increase: 'زيادة الكمية', specialRequests: 'طلبات خاصة', remove: 'إزالة', itemOne: 'عنصر', itemMany: 'عناصر', reviewCartItems: 'عناصر السلة', notePrefix: 'ملاحظة:' },
     home: {
@@ -190,14 +181,6 @@ export const content = {
       addonsEyebrow: 'اجعلها بطريقتك', addonsTitle: 'القليل الإضافي يصنع فرقاً.',
       addons: ['بار حلويات', 'محطة مشروبات', 'عربة فشار', 'عربة بطاطس', 'طهي حي', 'هوية مخصصة'],
     },
-    packages: {
-      'classic-burger': { title: 'برجر كلاسيك', category: 'الأطباق الرئيسية', description: 'شريحة لحم بقري عصارية مع الخس الطازج والطماطم وصلصتنا المميزة.', features: ['مشوي طازجاً', 'يشمل الجبن', 'يقدم ساخناً'] },
-      'margherita-pizza': { title: 'بيتزا مارغريتا', category: 'الأطباق الرئيسية', description: 'بيتزا مخبوزة على الحطب مع طماطم سان مارزانو، وموزاريلا طازجة، وريحان.', features: ['مخبوزة على الحطب', 'نباتية', 'عجينة مقرمشة'] },
-      'crispy-fries': { title: 'بطاطس مقرمشة', category: 'الأطباق الجانبية', description: 'بطاطس ذهبية ومقرمشة تقدم مع الكاتشب والمايونيز.', features: ['مملحة بعناية', 'مقرمشة من الخارج', 'هشة من الداخل'] },
-      'sweet-waffle': { title: 'وافل حلو', category: 'الحلويات', description: 'وافل بلجيكي دافئ مع السكر البودرة، وشراب القيقب، والكريمة المخفوقة.', features: ['محضر طازجاً', 'حلوى دافئة', 'إضافات مخصصة'] },
-      'ice-cream-scoops': { title: 'آيس كريم', category: 'الحلويات', description: 'آيس كريم غني وكريمي يقدم في كوب أو بسكويت. نكهات متعددة متاحة.', features: ['نكهات متعددة', 'منعش', 'رائع للأطفال'] },
-      'fresh-juice': { title: 'عصير طازج', category: 'المشروبات', description: 'عصير فواكه موسمية طازجة بدون سكر مضاف.', features: ['طبيعي 100%', 'مبرد', 'خيار صحي'] },
-    },
     about: {
       pageTitle: 'قصتنا', eyebrow: 'أكثر من مجرد وجبة', title: 'من عربات الطعام إلى', accent: 'احتفالات متكاملة.',
       copy: 'ستاندرد ضيافة بسيطة لكن بقلب أكبر — صُممت لتجعل التجمعات أسهل وأدفأ وأكثر شهية.',
@@ -217,7 +200,6 @@ export const content = {
       messagePlaceholder: 'أخبرنا بالمزيد...', send: 'أرسل رسالتك',
       quick: 'تفضل محادثة أسرع؟', direct: 'تواصل معنا مباشرة.', call: 'اتصل بنا', chat: 'تحدث مع فريقنا',
       come: 'نأتي إليك.', area: 'نخدم القاهرة والجيزة والإسكندرية. تخطط لمناسبة في مكان آخر؟ فقط اسألنا.',
-      note: 'بيانات التواصل مؤقتة حتى تأكيدها من العميل.',
     },
     order: {
       pageTitle: 'ابدأ طلبك', eyebrow: 'خطوات بسيطة', title: 'حدثنا عن', accent: 'طلبك.',

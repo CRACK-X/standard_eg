@@ -2,7 +2,6 @@ import heroPizzaStation from '../assets/WhatsApp Image 2026-08-21 at 7.35.58 PM.
 import outdoorGrill from '../assets/WhatsApp Image 2026-08-21 at 7.36.00 PM.webp'
 import corporateGrill from '../assets/IMG_2338.JPG.webp'
 import brandedFoodCarts from '../assets/IMG_4243.JPG.webp'
-import celebrationCarts from '../assets/IMG_2854.JPG.webp'
 import pizzaCloseup from '../assets/IMG_0055.JPG.webp'
 import burgerCatering from '../assets/IMG_2928.JPG.webp'
 import dessertStation from '../assets/IMG_3119.JPG.webp'
@@ -27,15 +26,6 @@ export const contact = {
 export const heroImage = heroPizzaStation
 export const storyImage = standardTeam
 export const whyStandardImage = outdoorGrill
-
-export const menuItems = [
-  { id: 'classic-burger', category: 'mains', image: burgerStation },
-  { id: 'margherita-pizza', category: 'mains', image: pizzaCloseup },
-  { id: 'crispy-fries', category: 'sides', image: brandedFoodCarts },
-  { id: 'sweet-waffle', category: 'desserts', image: dessertStation },
-  { id: 'ice-cream-scoops', category: 'desserts', image: iceCreamStation },
-  { id: 'fresh-juice', category: 'drinks', image: fruitStation },
-]
 
 export const gallerySources = [
   outdoorGrill,

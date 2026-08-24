@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   ArrowRight, ArrowUpRight, Building2, CalendarDays, Check, ChevronDown, Clock,
   ChevronLeft, CircleCheck, Heart, Home as HomeIcon, Mail, MapPin, MessageCircle, PartyPopper,
-  Phone, Plus, Minus, SendHorizonal, ShoppingCart, Star, Truck, Users, Utensils,
+  Phone, Plus, SendHorizonal, ShoppingCart, Star, Truck, Users, Utensils,
 } from 'lucide-react'
 import {
   BrowserRouter, Link, Route, Routes, useLocation, useNavigate,
@@ -21,9 +21,9 @@ import PageHero from './components/marketing/PageHero'
 import TrustMarquee from './components/marketing/TrustMarquee'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Terms from './pages/Terms'
-import { addonKeys, contact, gallerySources, heroImage, menuItems, storyImage, whyStandardImage } from './utils/siteData'
+import { addonKeys, contact, gallerySources, heroImage, storyImage, whyStandardImage } from './utils/siteData'
 import { useCart } from './context/CartContext'
-import { loadOrderDraft, readableOrder } from './utils/order'
+import { loadOrderDraft } from './utils/order'
 import { buildContactWhatsAppUrl, buildOrderWhatsAppUrl } from './utils/whatsapp'
 import { usePageMeta } from './utils/usePageTitle'
 import './styles/app.css'
@@ -73,73 +73,11 @@ function Menu() {
   const { c } = useLocale()
   const m = c.menu
   usePageMeta()
-  const [filter, setFilter] = useState('all')
-  const categories = ['all', 'mains', 'sides', 'desserts', 'drinks']
-  const visible = filter === 'all' ? menuItems : menuItems.filter(item => item.category === filter)
   return <><PageHero eyebrow={m.eyebrow} title={<>{m.title} <em>{m.accent}</em></>} copy={m.copy} />
     <section className="section shell package-section">
-      <div className="filter-tabs" role="tablist" aria-label={m.filter}>{categories.map(category => <button key={category} role="tab" aria-selected={filter === category} onClick={() => setFilter(category)} className={filter === category ? 'active' : ''}>{m.categories[category]}</button>)}</div>
-      <div className="package-grid">{visible.map((item, index) => <Reveal key={item.id} delay={index * 70}><PackageCard item={item} /></Reveal>)}</div>
       <MenuCatalog />
       <Reveal className="addons"><SectionIntro eyebrow={m.addonsEyebrow} title={m.addonsTitle} /><div className="addon-list">{m.addons.map((item, i) => <Link key={item} to={'/order?service=' + addonKeys[i]}><span>{String(i + 1).padStart(2, '0')}</span>{item}<Plus size={17} /></Link>)}</div></Reveal>
     </section><CtaBand /></>
-}
-
-function PackageCard({ item }) {
-  const { c } = useLocale()
-  const { addToCart } = useCart()
-  const [quantity, setQuantity] = useState(1)
-  const [note, setNote] = useState('')
-  const [added, setAdded] = useState(false)
-  const details = c.packages[item.id]
-  const t = c.cart
-
-  const handleAdd = () => {
-    addToCart({
-      id: item.id,
-      name: details.title,
-      image: item.image,
-      quantity,
-      note
-    })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 2000)
-  }
-
-  return (
-    <article className="package-card">
-      <div className="package-card__image">
-        <img src={item.image} alt={details.title} loading="lazy" width="600" height="400" />
-        <span className="package-card__badge" aria-label="Standard Catering Brand">Standard Catering</span>
-        <span className="package-card__category">{c.menu.categories[item.category]}</span>
-      </div>
-      <div className="package-card__body">
-        <h2>{details.title}</h2>
-        <p>{details.description}</p>
-        <ul>{details.features.map(feature => <li key={feature}><Check size={14} />{feature}</li>)}</ul>
-        <div className="package-card__bottom">
-          <div className="package-card__controls">
-            <div className="quantity-selector">
-              <button aria-label={t.decrease} onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus size={14}/></button>
-              <span>{quantity}</span>
-              <button aria-label={t.increase} onClick={() => setQuantity(q => q + 1)}><Plus size={14}/></button>
-            </div>
-            <input
-              type="text"
-              className="package-card__note"
-              placeholder={t.addNote}
-              value={note}
-              onChange={e => setNote(e.target.value)}
-              aria-label={t.specialRequests}
-            />
-          </div>
-          <button className={`button ${added ? 'button--gold' : 'button--navy'} full-width-btn`} onClick={handleAdd}>
-            {added ? <><Check size={16}/> {t.added}</> : <><ShoppingCart size={16}/> {t.addToCart}</>}
-          </button>
-        </div>
-      </div>
-    </article>
-  )
 }
 
 function About() {
@@ -152,7 +90,7 @@ function About() {
     <section className="section shell faq-section">
       <Reveal><SectionIntro eyebrow={c.faq.eyebrow} title={c.faq.title} centered /></Reveal>
       <Reveal delay={100} className="faq-grid">
-        {c.faq.items.map((item, i) => <div className="faq-item" key={i}><h4>{item.q}</h4><p>{item.a}</p></div>)}
+        {c.faq.items.map((item, i) => <div className="faq-item" key={i}><h3>{item.q}</h3><p>{item.a}</p></div>)}
       </Reveal>
     </section>
     <section className="shell about-gallery"><Reveal className="about-gallery__heading"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal><Reveal delay={85}><MasonryGallery className="about-masonry" label={a.gallery} items={[gallerySources[3], gallerySources[5], gallerySources[1], gallerySources[0], gallerySources[4], gallerySources[2]].map((src, i) => ({ src, alt: c.galleryAlt[[3, 5, 1, 0, 4, 2][i]] }))} /></Reveal></section>
@@ -178,8 +116,8 @@ function Contact() {
   }
   return <><PageHero eyebrow={x.eyebrow} title={<>{x.title} <em>{x.accent}</em></>} copy={x.copy} />
     <section className="section shell contact-layout">
-      <Reveal className="contact-form-wrap"><SectionIntro eyebrow={x.formEyebrow} title={x.formTitle} /><form className="contact-form" onSubmit={handleSubmit}>{sent && <div className="form-success"><CircleCheck /> {x.sent}</div>}<input name="_website" type="text" style={{display:'none'}} tabIndex="-1" autoComplete="off" /><div className="form-row"><Field label={x.name} name="name" required /><Field label={x.phone} name="phone" type="tel" required /></div><Field label={x.email} name="email" type="email" placeholder={c.common.optional} /><label>{x.topic}<select name="topic" defaultValue={x.topics[0]}>{x.topics.map(topic => <option key={topic}>{topic}</option>)}</select><ChevronDown /></label><label>{x.message}<textarea name="message" rows="5" required placeholder={x.messagePlaceholder} /></label><button className="button button--navy" type="submit">{x.send} <ArrowRight size={17} /></button></form></Reveal>
-      <Reveal delay={120} className="contact-info"><Eyebrow>{x.quick}</Eyebrow><h2>{x.direct}</h2><div className="contact-info__card"><a href={contact.phoneHref}><span><Phone /></span><div><small>{x.call}</small><b>{contact.phoneDisplay}</b></div><ArrowUpRight size={18} /></a><a href={contact.whatsapp} target="_blank" rel="noreferrer"><span><MessageCircle /></span><div><small>{c.common.whatsapp}</small><b>{x.chat}</b></div><ArrowUpRight size={18} /></a><a href={'mailto:' + contact.email}><span><Mail /></span><div><small>{c.common.email}</small><b>{contact.email}</b></div><ArrowUpRight size={18} /></a></div><div className="service-area"><MapPin /><div><b>{x.come}</b><p>{x.area}</p></div></div><div className="map-embed"><iframe title="Standard Catering — Cairo service area" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221786.59583396408!2d31.18401!3d30.06263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14583fa60b21beeb%3A0x79dfb296e8423bba!2sCairo%2C%20Egypt!5e0!3m2!1sen!2seg!4v1234567890" width="100%" height="260" style={{border:0,display:'block'}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe></div><p className="contact-note">{x.note}</p></Reveal>
+      <Reveal className="contact-form-wrap"><SectionIntro eyebrow={x.formEyebrow} title={x.formTitle} /><form className="contact-form" onSubmit={handleSubmit}>{sent && <div className="form-success"><CircleCheck /> {x.sent}</div>}<input name="_website" type="text" style={{display:'none'}} tabIndex="-1" autoComplete="off" /><div className="form-row"><Field label={x.name} name="name" required /><Field label={x.phone} name="phone" type="tel" required pattern="01[0125][0-9]{8}" title="01xxxxxxxxx" /></div><Field label={x.email} name="email" type="email" placeholder={c.common.optional} /><label>{x.topic}<select name="topic" defaultValue={x.topics[0]}>{x.topics.map(topic => <option key={topic}>{topic}</option>)}</select><ChevronDown /></label><label>{x.message}<textarea name="message" rows="5" required placeholder={x.messagePlaceholder} /></label><button className="button button--navy" type="submit">{x.send} <ArrowRight size={17} /></button></form></Reveal>
+      <Reveal delay={120} className="contact-info"><Eyebrow>{x.quick}</Eyebrow><h2>{x.direct}</h2><div className="contact-info__card"><a href={contact.phoneHref}><span><Phone /></span><div><small>{x.call}</small><b>{contact.phoneDisplay}</b></div><ArrowUpRight size={18} /></a><a href={contact.whatsapp} target="_blank" rel="noreferrer"><span><MessageCircle /></span><div><small>{c.common.whatsapp}</small><b>{x.chat}</b></div><ArrowUpRight size={18} /></a><a href={'mailto:' + contact.email}><span><Mail /></span><div><small>{c.common.email}</small><b>{contact.email}</b></div><ArrowUpRight size={18} /></a></div><div className="service-area"><MapPin /><div><b>{x.come}</b><p>{x.area}</p></div></div><div className="map-embed"><iframe title="Standard Catering — Cairo service area" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221786.59583396408!2d31.18401!3d30.06263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14583fa60b21beeb%3A0x79dfb296e8423bba!2sCairo%2C%20Egypt!5e0!3m2!1sen!2seg!4v1234567890" width="100%" height="260" style={{border:0,display:'block'}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe></div></Reveal>
     </section>
   </>
 }

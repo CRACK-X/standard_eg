@@ -1,5 +1,3 @@
-import { menuItems } from './siteData'
-
 export const initialOrder = {
   date: '',
   time: '',
@@ -22,12 +20,10 @@ export function loadOrderDraft(searchParams) {
   }
 
   const presetService = searchParams.get('service')
-  const presetPackage = searchParams.get('package')
-  const preset = presetService || (menuItems.some(item => item.id === presetPackage) ? presetPackage : '')
 
   return {
     ...saved,
-    services: preset ? [...new Set([...(saved.services || []), preset])] : (saved.services || []),
+    services: presetService ? [...new Set([...(saved.services || []), presetService])] : (saved.services || []),
   }
 }
 

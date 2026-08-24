@@ -1,0 +1,424 @@
+================================================================================
+PROMPT FOR CLAUDE AI — STANDARD CATERING WEBSITE: FULL PROJECT HANDOFF
+================================================================================
+
+You are receiving complete context for an existing production website project so
+you can continue working on it without breaking anything. Read all of this before
+making any changes. The project is finished, deployed, and live — treat it as
+production. Work carefully, follow the conventions below, and never regress the
+security, SEO, or performance work described here.
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+- Client business : "Standard Catering" (Egyptian event-catering company)
+                    Mobile catering, food trucks, open buffets, live food stations.
+                    Service area: Cairo, Giza, Alexandria, Egypt.
+- Live URL        : https://standard-eg.gold-rush.workers.dev   (CURRENT, correct)
+- Old URL         : https://standard-eg.web-hub-info-2026.workers.dev
+                    (STALE deployment on a DIFFERENT Cloudflare account we do not
+                    control; still online serving old content — see section 10)
+- Future domain   : standardcatering.eg is planned but NOT purchased yet. When it
+                    is bought, update ONE constant (SITE_URL in src/config.js),
+                    rebuild, redeploy — everything else derives from it.
+- Contact channel : WhatsApp is the conversion channel everywhere.
+                    Number: +20 127 771 1157 (contact.phoneHref/wa.me links)
+                    Email: Standardcatering777@gmail.com
+                    Instagram: https://www.instagram.com/standard_egypt/
+- Languages       : Bilingual English / Arabic with full RTL support.
+- Repo            : https://github.com/mohabprogrammer/standard_eg.git (branch main)
+                    Local working dir:
+                    /home/mahmoud/Documents/Programming/Real_projects/webhub/Standard_eg/app
+- Hosting         : Cloudflare Workers static assets (free tier), worker name
+                    "standard-eg", Cloudflare account "GoldRush"
+                    (minothepro102030@gmail.com). NO server-side code runs — the
+                    worker serves static files from dist/ via wrangler assets.
+
+================================================================================
+2. TECH STACK & TOOLING
+================================================================================
+
+- React 19.2.8 + react-router-dom 7.x (BrowserRouter client-side; StaticRouter
+  only inside the prerender pipeline, imported from 'react-router' NOT
+  'react-router-dom')
+- Vite 8.2.2 (rolldown-based) with @vitejs/plugin-react
+- Styling: plain CSS only. Two files:
+    src/styles/global.css  → tiny reset/:root base font
+    src/styles/app.css     → ~1100 lines, ALL component styles, appended
+                             sections at the bottom are the newest refinements.
+                             CSS custom properties in :root (--navy #0b1f3a,
+                             --gold #d4b78f, --gold-text #7d6540 [WCAG-safe gold
+                             for light backgrounds], --gold-light, --cream,
+                             --line, --serif 'Playfair Display', etc.)
+- Icons: lucide-react (tree-shaken individual imports)
+- Fonts: SELF-HOSTED in public/fonts/ (15 woff2 subsets + fonts.css).
+          Families: DM Sans 400/500/600/700 latin, Playfair Display 600/700 +
+          italic-700 latin, Cairo 400/500/600/700 arabic+latin (Arabic UI font,
+          applied via html[lang="ar"] rules). NO Google Fonts requests exist —
+          do not reintroduce them. Critical fonts preloaded in index.html.
+- i18n: custom solution (NO i18n library) — see section 5.
+- Linting: oxlint ("npm run lint") — currently 0 errors; a few benign
+  fast-refresh warnings remain (context files export hooks alongside provider;
+  that pattern is intentional).
+- Node v22.22.0 on this machine. wrangler installed as devDependency.
+
+Commands:
+  npm run dev     – Vite dev server
+  npm run build   – THE build: vite build (client) && vite build --ssr
+                    scripts/prerender-entry.jsx --outDir .prerender &&
+                    node scripts/prerender.mjs (generates final dist/)
+  npm run preview – serve dist locally
+  npx wrangler deploy – deploy dist/ to the standard-eg worker
+
+IMPORTANT BUILD QUIRK: node_modules was once copied from Windows and lacked
+Linux binaries/exec bits ("vite: Permission denied" / missing
+@rolldown/binding-linux-x64-gnu). Fix was `rm -rf node_modules && npm install`.
+If native-module errors appear again, reinstall dependencies first.
+
+================================================================================
+3. ARCHITECTURE & FILE MAP
+================================================================================
+
+src/
+  config.js                      ← SINGLE SOURCE OF TRUTH:
+                                   SITE_URL ('https://standard-eg.gold-rush.workers.dev'),
+                                   SITE_NAME ('Standard Catering'), ROUTE_META
+                                   (per-route EN/AR {title, description} + optional
+                                   noindex:true), SITEMAP_PATHS ['/', '/menu',
+                                   '/about', '/contact', '/order'].
+                                   Changing SITE_URL here propagates to canonicals,
+                                   OG tags, JSON-LD, robots.txt, sitemap.xml.
+  main.jsx                       ← createRoot entry (client only)
+  App.jsx                        ← ALL pages/routes as components in one file:
+                                   Home, Menu, About, Contact, Order (multi-step
+                                   wizard: StepDetails/StepReview/OrderSummary/
+                                   ReviewGroup), OrderSuccess, NotFound,
+                                   ServiceCard, PackageCard, Occasion, etc.
+                                   Exports: default App (BrowserRouter wrapper),
+                                   AppProviders (LocaleProvider>CartProvider),
+                                   AppRoutes (used by both App and prerenderer).
+  utils/i18n.js                  ← exports content (en/ar strings object) +
+                                   LocaleProvider/useLocale hook (section 5)
+  utils/siteData.js              ← image imports + services array, gallery
+                                   sources, hero/story images
+  utils/menuCatalog.js           ← menu collections data (camelCase keys used as
+                                   DOM ids/anchors: streetFood, desserts, drinks…)
+  utils/order.js                 ← initialOrder shape, loadOrderDraft(sessionStorage),
+                                   readableOrder() formatter
+  utils/whatsapp.js              ← buildOrderWhatsAppUrl(order, items, c, ref),
+                                   buildContactWhatsAppUrl(fields, c, language);
+                                   wa.me on mobile, whatsapp:// scheme fallback,
+                                   encodeURIComponent everywhere
+  utils/usePageTitle.js          ← usePageMeta() hook: syncs document.title +
+                                   meta description/robots/canonical/og/twitter
+                                   tags per route+language (client-side SEO for
+                                   SPA navigations; crawlers get baked HTML anyway)
+  config.js ROUTE_META keys      ← '/', '/menu', '/about', '/contact', '/order',
+                                   '/order/success' (noindex), '/terms',
+                                   '/privacy', '404' (noindex)
+  context/CartContext.jsx        ← cart state: items[{id,name,quantity,note}],
+                                   localStorage persistence (SSR-safe initCart()
+                                   with try/catch), reducer, CartDrawer open state
+  styles/app.css                 ← all styling; bottom block "UI/UX refinement
+                                   pass" = latest fixes (see section 7)
+  components/common/             ← Logo, Reveal (IntersectionObserver fade-in,
+                                   SSR-safe), SectionIntro/Eyebrow/GoldRule,
+                                   CookieBanner, LeaveWarning
+  components/layout/             ← Header (sticky nav + mobile drawer + lang
+                                   toggle), Footer, Layout, FloatingContact
+                                   (WhatsApp pill z-index 12), FloatingCart
+                                   (menu page only, z-index 99, sits ABOVE the
+                                   contact pill on mobile via bottom:88px),
+                                   CartDrawer (slides from left in RTL)
+  components/marketing/          ← PageHero (navy hero + decorative orb rings),
+                                   MenuCatalog (Amazon-style cards + anchor chip
+                                   nav), MasonryGallery, CtaBand, TrustMarquee
+  pages/                         ← PrivacyPolicy.jsx, Terms.jsx
+scripts/
+  prerender-entry.jsx            ← SSR bundle entry: imports App pieces + config,
+                                   exports renderPrerendered(path) using
+                                   StaticRouter from 'react-router'
+  prerender.mjs                  ← SSG generator (section 4)
+public/
+  _headers                       ← security headers + cache rules (section 6)
+  robots.txt / sitemap.xml       ← static copies for parity; REGENERATED by
+                                   build into dist/ from src/config.js
+  site.webmanifest               ← PWA manifest, icons /icons/*.png
+  favicon.png (180px), icons/{favicon-32,icon-192,apple-touch-icon(180),
+  icon-512}.png, og-image.png (1200×630 navy branded banner)
+  fonts/                         ← self-hosted woff2 + fonts.css
+index.html                       ← TEMPLATE with %%TOKENS%% replaced per-route by
+                                   the prerenderer (section 4); contains meta set,
+                                   JSON-LD @graph (WebSite + LocalBusiness/
+                                   FoodEstablishment/CateringService + WebPage),
+                                   noscript reveal-unhide style
+wrangler.jsonc                   ← name "standard-eg", compatibility_date
+                                   2026-08-01, assets directory ./dist,
+                                   not_found_handling "404-page",
+                                   html_handling "auto-trailing-slash",
+                                   observability enabled
+.gitignore                       ← includes .prerender/, .wrangler/, dist/
+
+================================================================================
+4. PRERENDER / SSG PIPELINE (CRITICAL TO UNDERSTAND)
+================================================================================
+
+The site is a React SPA but every route ships as fully-rendered static HTML for
+crawlers/instant paint:
+
+  npm run build =
+    1) vite build                → dist/ client bundle (hashed assets)
+    2) vite build --ssr scripts/prerender-entry.jsx --outDir .prerender
+                                 → SSR module bundle (excludes LeaveWarning)
+    3) node scripts/prerender.mjs→ reads dist/index.html template, renders each
+       route with renderToString + StaticRouter, replaces tokens, writes:
+         dist/index.html, menu.html, about.html, contact.html, order.html,
+         order/success.html, privacy.html, terms.html, 404.html (noindex)
+         dist/robots.txt + dist/sitemap.xml (generated from SITEMAP_PATHS)
+
+  Tokens replaced per route: %%RENDERED_BODY%% %%PAGE_TITLE%% %%DESCRIPTION%%
+  %%ROBOTS%% %%CANONICAL%% %%OG_TITLE%% %%OG_DESCRIPTION%% %%OG_URL%%
+  %%PAGE_PATH%% %%SITE_URL%% %%EXTRA_JSONLD%% (FAQPage schema injected on
+  /about, built from content.en.faq.items so it can't drift from the UI).
+
+Cloudflare Workers assets serving rules (why flat files work):
+  - html_handling "auto-trailing-slash": /menu serves dist/menu.html
+  - not_found_handling "404-page": any unknown path serves dist/404.html WITH
+    HTTP STATUS 404 (verified live: status=404, 14.5KB styled body)
+
+RULES FOR THIS PIPELINE (breaking these broke the build before):
+  - Do NOT re-add React.lazy/Suspense around route components — they were
+    removed deliberately because lazy() renders fallbacks during SSR.
+  - Components must be SSR-safe: no window/document/localStorage/sessionStorage
+    access during render. Use useState(() => typeof X === 'undefined') patterns
+    and useEffect guards (Reveal, CartContext initCart, LocaleProvider
+    initialLanguage, loadOrderDraft all do this correctly).
+  - react-router v7: StaticRouter comes from 'react-router', NOT react-router-dom.
+  - After building, .prerender/ is deleted by prerender.mjs and gitignored.
+
+================================================================================
+5. INTERNATIONALIZATION (EN/AR) — HOW IT WORKS
+================================================================================
+
+- src/utils/i18n.js exports `content` = { en: {...}, ar: {...} } — one big nested
+  object of ALL copy (nav, home, order wizard steps, cart, cookie banner, FAQ,
+  privacy, terms, notFound, success...). Adding copy means adding it in BOTH
+  locales; missing keys crash components that destructure them.
+- LocaleProvider stores language ('en'|'ar') in state, persists to localStorage,
+  sets <html lang dir> (rtl for Arabic) via effect. useLocale() returns
+  { c, language } where c = current locale's content object.
+- Components grab section objects: const t = c.cart; const b = c.order.basics…
+- Arabic typography handled by html[lang="ar"] CSS rules switching font-family
+  to Cairo and zeroing negative letter-spacing.
+- RTL layout: logical mirroring done explicitly in app.css via [dir="rtl"]
+  selectors — CartDrawer slides from LEFT in Arabic (slideInLeft keyframes),
+  header mobile nav opens from left, arrows flip via transform scaleX(-1).
+- EVERYTHING user-facing must be translated. Historical bug: cart UI was
+  hardcoded English — fixed by adding c.cart.* keys to both locales. If you add
+  UI text, add i18n keys for both en and ar.
+
+================================================================================
+6. SECURITY POSTURE (DO NOT REGRESS)
+================================================================================
+
+public/_headers applies to all routes:
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src
+    'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:;
+    connect-src 'self'; frame-src https://www.google.com https://maps.google.com;
+    media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';
+    frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff | X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+Cache rules: /assets/* and /fonts/* immutable 1yr; favicon/icons/og-image 7d;
+robots/sitemap 1h.
+Notes: style-src keeps 'unsafe-inline' because React inline styles need it;
+script-src has NO unsafe-inline (JSON-LD blocks are exempt from CSP);
+frame-src allows ONLY Google Maps iframe (contact page embed).
+
+Verified behaviors (tested locally + live):
+  - POST to any path → 405; unknown paths → styled 404 with HTTP 404;
+    path traversal (/assets/../wrangler.jsonc) blocked; npm audit clean;
+    no secrets in repo; WhatsApp URLs properly encoded; honeypot field
+    (_website input) on contact form for bot filtering.
+
+Security-sensitive code decisions:
+  - Order reference numbers: crypto.getRandomValues(new Uint32Array(1)) —
+    NEVER revert to Math.random().
+  - sessionStorage 'standard_order_draft' holds only order-form fields (name/
+    phone/email/city/address/notes/services/budget/date/time/consent). PII is
+    session-scoped, acceptable; documented as accepted residual risk (S5/INFO).
+  - No backend exists AT ALL. Nothing ever transmits except WhatsApp deep links.
+
+================================================================================
+7. UI/UX CONVENTIONS & KNOWN FIXES (WHY THINGS LOOK THE WAY THEY DO)
+================================================================================
+
+Accessibility/WCAG decisions:
+  - Gold text on light backgrounds MUST be var(--gold-text) #7d6540 (≥4.5:1),
+    NOT var(--gold)/--gold-dark which fail contrast (~1.9:1). Bright --gold is
+    reserved for dark navy surfaces (.home-hero/.page-hero/.gallery-section/
+    .cta-band/.success-page/.not-found .eyebrow overrides restore it there).
+  - Other contrast fixes applied: order-step labels #6f6a5c, footer muted
+    rgba(255,255,255,.58–.78), order-summary dt #6b6357, .text-link uses
+    --gold-text (+ .gallery-heading override back to bright gold on navy).
+
+Layout bug fixes baked in (do not undo):
+  - Floating overlap: on ≤850px the FloatingCart moves up (bottom:88px,
+    width:min(calc(100% - 32px),400px)) so it never covers the WhatsApp pill.
+  - Equal-height grid cells: .service-grid > * and .occasion-grid > * are
+    display:flex/flex-direction:column with .service-card/.occasion flex:1 —
+    this is what keeps shared border lines even when sibling text lengths
+    differ (was visibly broken on phones). Occasions become a gap-line 2×2
+    grid under 800px (border:none !important on cells there is intentional).
+  - Tablet breakpoint added @media (max-width:1080px): service/addon/package/
+    menu grids drop to 2 columns; footer 2-col with brand spanning.
+  - Menu page (MenuCatalog): centered SectionIntro, category chip nav
+    (.menu-catalog__nav anchors to collection ids — camelCase keys like
+    #streetFood), stretch equal-height cards, centered h3 with gold ::after
+    rule, always-visible qty/add controls, scroll-margin-top:110px for sticky
+    header offset. Style target: clean Amazon-like product listing.
+  - About page: masonry tile border-radius normalized to uniform 16px (the
+    random blob radii like '72px 12px 14px 46px' were removed on purpose),
+    section paddings tightened (~86px vs 113px), story-grid gap clamped
+    42–92px.
+  - RTL mirrors drawers/nav explicitly (see section 5).
+
+Images: brand logos compressed to ≤56px height PNGs (~106KB total, down from
+1.1MB); photos are WebP q80 capped 1600px long edge (~1.8MB total). All imgs
+have explicit width/height (CLS protection), loading=lazy below fold,
+decoding=async. Home hero img: fetchPriority=high loading=eager.
+
+Performance specifics:
+  - Fonts fully self-hosted + preloaded (DMSans 400/700 latin, Playfair 700
+    latin); fonts.css uses unicode-range subsets with font-display swap.
+  - content-visibility:auto + contain-intrinsic-size on .about-gallery,
+    .gallery-section, .occasion-section, .testimonial-section, .footer
+    (with print override). Do not apply to .menu-catalog (anchor jumps).
+  - JS bundle ~352KB raw/~120KB gzip single-chunk (lazy-loading was traded away
+    for prerendering — accepted tradeoff). If bundle size becomes a problem,
+    solve via manual vendor splitting, NOT React.lazy route suspension.
+
+================================================================================
+8. FEATURES — WHAT EACH PAGE DOES
+================================================================================
+
+HOME (/): navy hero over photo bg, trust marquee of client logos, services grid
+(4 cards), packages showcase (PackageCard with qty steppers → addToCart),
+gallery masonry, testimonials, why-standard checklist, CTA band.
+
+MENU (/menu): MenuCatalog — 3 collections (streetFood/desserts/drinks keys),
+each card: image, centered title, intro, groups with uppercase headers, item
+rows each with qty stepper + add-to-cart button. Category chips jump to cards.
+FloatingCart appears here when cart non-empty. CartDrawer lists items with
+notes, quantity editing, checkout → builds WhatsApp order message.
+
+ORDER (/order): 4-step wizard (Delivery basics → Details → Review → success),
+left OrderSummary aside, draft persisted to sessionStorage, URL params
+?service=/package= preselect items, consent checkbox required, submit opens
+WhatsApp with formatted order message (EN or AR template incl. reference number)
+then redirects to /order/success (noindex) showing reference + summary.
+Preferred-contact-method field was REMOVED (user decision) — contactMethod
+state/key/formatter/i18n strings all purged; don't resurrect them.
+
+ABOUT (/about): PageHero, story split-grid with masonry photos, occasions row
+(4 icon cards), FAQ grid (source of FAQPage JSON-LD), gallery heading + 6-tile
+masonry, CtaBand.
+
+CONTACT (/contact): form (honeypot protected) builds WhatsApp message via
+buildContactWhatsAppUrl and opens it, then shows inline sent-state; quick-
+contact cards (call/WhatsApp/email), service-area note, lazy Google Maps iframe.
+
+PRIVACY (/privacy) & TERMS (/terms): localized legal copy pages.
+404: styled navy page, noindex, real HTTP 404 status.
+
+Global: Header with language toggle EN⇄AR, CookieBanner (localStorage, essential
+cookies only), LeaveWarning (beforeunload guard when cart non-empty), footer.
+
+================================================================================
+9. AUDIT HISTORY — FINDINGS AND RESOLUTION STATUS
+================================================================================
+
+SECURITY audit (all resolved unless noted):
+  S1 HIGH zero security headers      → FIXED (_headers file, verified live)
+  S2 MED empty-body 404s             → FIXED (404-page handling, 14.5KB styled)
+  S3 LOW Math.random() order refs    → FIXED (crypto.getRandomValues)
+  S4 MED contact form faked success  → FIXED (real WhatsApp handoff)
+  S5 INFO PII in sessionStorage      → ACCEPTED/documented (session-only scope)
+  Path traversal/method abuse/npm audit/secrets scans → PASSED
+
+SEO audit (all resolved):
+  O1 CRIT client-only rendering      → FIXED (full prerender pipeline, section 4)
+  O2 CRIT canonical pointed to unregistered domain → FIXED (SITE_URL constant;
+       currently gold-rush.workers.dev; switch when domain bought)
+  O3 HIGH no per-route meta          → FIXED (ROUTE_META + usePageMeta + baked HTML)
+  O4 MED no structured data          → FIXED (JSON-LD @graph + FAQPage on /about)
+  O5 MED og:image was 210KB favicon  → FIXED (proper 1200×630 og-image.png)
+  O6 MED huge logos/duplicate fonts  → FIXED (compression + self-hosting)
+  robots.txt + sitemap.xml generated from SITEMAP_PATHS ✓
+
+UI audit (all resolved):
+  untranslated cart UI (EN/AR) · floating cart covering WhatsApp button ·
+  RTL drawers opening wrong side · WCAG gold-on-cream failures · uneven
+  service/occasion borders on mobile · missing tablet breakpoint · About-page
+  blob-shaped tiles ("ovals") · excessive About whitespace · unstyled loading
+  fallback (moot after Suspense removal)
+
+PERFORMANCE work completed:
+  self-hosted fonts (removed googleapis/gstatic RTTs + render-blocking CSS),
+  font preloads, WebP photos, compressed logos, immutable caching, explicit
+  image dimensions, fetchpriority hero, decoding=async, content-visibility on
+  heavy sections, prerendered HTML (near-instant FCP/LCP from network).
+
+================================================================================
+10. OPEN ITEMS / KNOWN ISSUES (START HERE IF ASKED "WHAT'S LEFT")
+================================================================================
+
+1. GITHUB PUSH BLOCKED: two commits (9ea6ecb, da289c5) exist locally on main
+   but push fails — this machine's gh CLI is authed as account "CRACK-X" which
+   has NO access to github.com/mohabprogrammer/standard_eg (403). Fix requires
+   the USER to run `gh auth login` as mohabprogrammer (or grant CRACK-X
+   collaborator access), then `git push origin main`.
+
+2. STALE OLD DEPLOYMENT: standard-eg.web-hub-info-2026.workers.dev still serves
+   the pre-fix site from a different Cloudflare account (not "GoldRush"). It
+   competes with the new URL for SEO. Options: log into that account and delete/
+   redeploy the worker, or ignore. Canonicals already point to gold-rush.
+
+3. CUSTOM DOMAIN: when standardcatering.eg is purchased — update SITE_URL in
+   src/config.js (and the two static public/robots.txt + sitemap.xml copies),
+   npm run build, npx wrangler deploy, plus Cloudflare dashboard: custom domain
+   for the worker + rebuild/redeploy so canonicals match.
+
+4. Deferred ideas (discussed, not scheduled): route-level JS vendor splitting;
+   live Lighthouse/Core Web Vitals measurement (needs chrome-devtools MCP
+   configured — skill web-perf is loaded but MCP tools absent on this box);
+   possibly deleting the download_logos5.ps1 leftover in src/assets/logos/.
+
+5. Deployment auth: wrangler OAuth is logged in as minothepro102030@gmail.com
+   (GoldRush, account id cc991997f835cfad736448878ae5cfcd). If token expires,
+   re-run `npx wrangler login` BEFORE deploying.
+
+================================================================================
+11. WORKING AGREEMENT FOR YOU (CLAUDE)
+================================================================================
+
+- Always verify changes end-to-end: npm run lint → npm run build (must print
+  "Prerendered 8 routes + 404.html, robots.txt and sitemap.xml into dist/")
+  → spot-check dist/*.html → npx wrangler deploy → curl the live URLs.
+- Never commit secrets; never commit dist/, .prerender/, .wrangler/.
+- Commit style: short imperative subject line + body bullets, matching recent
+  history ("UI polish, order form simplification, self-hosted fonts").
+- Keep EN and AR copy in sync; keep CSP aligned with any new external origins
+  (prefer ZERO external origins — everything is self-hosted now).
+- Preserve SSR-safety, i18n completeness, contrast tokens, equal-height grid
+  patterns, and the prerender pipeline constraints in section 4.
+- When unsure whether something was intentional, this document says so: the
+  removals (React.lazy, preferred-contact field, blob border-radii, Google
+  Fonts) were deliberate decisions — do not "helpfully" restore them.
+
+— End of handoff document —
+================================================================================

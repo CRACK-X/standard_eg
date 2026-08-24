@@ -5,7 +5,7 @@ export const SITE_NAME = 'Standard Catering'
 // Keys are route pathnames; '404' is the fallback for unmatched paths.
 export const ROUTE_META = {
   '/': {
-    en: { title: 'Catering crafted for every celebration', description: 'Standard Catering brings mobile catering, food trucks, open buffets and live food stations to weddings, corporate events and celebrations across Cairo, Giza, Alexandria and Egypt.' },
+    en: { title: 'Catering crafted for every celebration', description: 'Mobile catering, food trucks, open buffets and live food stations for weddings, corporate events and celebrations across Cairo, Giza and Egypt.' },
     ar: { title: 'ضيافة مصنوعة لكل احتفال', description: 'ستاندرد كاترينج يقدم الضيافة المتنقلة وفود ترك والبوفيهات المفتوحة ومحطات الطعام الحية لحفلات الزفاف والمناسبات الشركة في القاهرة والجيزة والإسكندرية ومصر.' },
   },
   '/menu': {
