@@ -7,7 +7,7 @@ import { useCart } from '../../context/CartContext'
 import Reveal from '../common/Reveal'
 import SectionIntro from '../common/SectionIntro'
 
-function MenuItemRow({ item, collectionTitle }) {
+function MenuItemRow({ item, collectionTitle, imageKey }) {
   const { addToCart } = useCart()
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
@@ -17,7 +17,8 @@ function MenuItemRow({ item, collectionTitle }) {
       id: `${collectionTitle}-${item}`.toLowerCase().replace(/\s+/g, '-'),
       name: item,
       quantity,
-      note: ''
+      note: '',
+      collection: imageKey
     })
     setAdded(true)
     setQuantity(1)
@@ -69,7 +70,7 @@ export default function MenuCatalog() {
             <p>{collection.intro}</p>
             {collection.groups.map(group => <section className="menu-collection__group" key={group.title}>
               <h4>{group.title}</h4>
-              <ul className="menu-item-list">{group.items.map(item => <MenuItemRow key={item} item={item} collectionTitle={collection.title} />)}</ul>
+              <ul className="menu-item-list">{group.items.map(item => <MenuItemRow key={item} item={item} collectionTitle={collection.title} imageKey={key} />)}</ul>
             </section>)}
           </div>
         </article>
