@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://standard-eg.gold-rush.workers.dev/sitemap.xml
+Sitemap: https://standardcatering.org/sitemap.xml
