@@ -237,9 +237,9 @@ function OpenBuffetItemRow({ item, num }) {
   }
 
   return (
-    <li className="menu-item-row" style={{ borderBottom: '1px dashed rgba(231,223,207,.6)', margin: '0', padding: '9px 0' }}>
+    <li className="menu-item-row">
       <div className="menu-item-row__name">
-        <span className="open-buffet-item-list__num" style={{ marginRight: '10px' }}>{num}</span>
+        <span className="open-buffet-item-list__num">{num}</span>
         <span>{item}</span>
       </div>
       <div className="menu-item-row__actions">
