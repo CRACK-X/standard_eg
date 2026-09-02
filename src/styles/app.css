@@ -322,8 +322,8 @@ em { font-weight: inherit; color: var(--gold); }
 .open-buffet-section__filter button:hover { border-color: var(--gold-light); color: #fff; }
 .open-buffet-section__filter button.active { background: linear-gradient(135deg, var(--gold-light), var(--gold)); border-color: transparent; color: var(--navy); }
 
-.open-buffet-section__banner { border-radius: 16px; overflow: hidden; margin-bottom: 30px; }
-.open-buffet-section__banner img { display: block; width: 100%; height: auto; aspect-ratio: 16/7; object-fit: cover; }
+.open-buffet-section__banner { border-radius: 16px; overflow: hidden; margin-bottom: 30px; background: #0d1f37; }
+.open-buffet-section__banner img { display: block; width: 100%; height: auto; object-fit: contain; }
 
 .open-buffet-section__body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
 .open-buffet-section__col {
@@ -371,13 +371,11 @@ em { font-weight: inherit; color: var(--gold); }
 @media (max-width: 560px) {
   .open-buffet-section { padding: 24px 18px; border-radius: 18px; }
   .open-buffet-section__banner { border-radius: 12px; margin-bottom: 22px; }
-  .open-buffet-section__banner img { aspect-ratio: 4/3; }
   .open-buffet-section__body .menu-item-row { flex-direction: column; align-items: stretch; gap: 10px; }
   .open-buffet-section__body .menu-item-row__actions { justify-content: space-between; }
   .open-buffet-section__header { margin-bottom: 24px; }
 }
 @media (max-width: 380px) {
-  .open-buffet-section__banner img { aspect-ratio: 1/1; }
   .menu-item-row__presets button { width: 24px; height: 24px; }
 }
 .addons { border-top: 1px solid var(--line); margin-top: 93px; padding-top: 69px; }
