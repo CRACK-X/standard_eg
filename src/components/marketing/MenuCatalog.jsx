@@ -141,6 +141,7 @@ export default function MenuCatalog() {
             {collection.title}
           </a>
         ))}
+        <a href="#open-buffet" className="menu-catalog__nav-open-buffet">{catalog.openBuffetLabel}</a>
       </nav>
     </Reveal>
 

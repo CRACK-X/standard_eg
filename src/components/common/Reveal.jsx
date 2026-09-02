@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-export default function Reveal({ children, className = '', delay = 0 }) {
+export default function Reveal({ children, className = '', delay = 0, id }) {
   const [visible, setVisible] = useState(() => typeof IntersectionObserver === 'undefined')
   const ref = useRef(null)
 
@@ -23,5 +23,5 @@ export default function Reveal({ children, className = '', delay = 0 }) {
     return () => observer.disconnect()
   }, [visible])
 
-  return <div ref={ref} className={'reveal ' + (visible ? 'reveal--visible ' : '') + className} style={{ '--reveal-delay': delay + 'ms' }}>{children}</div>
+  return <div ref={ref} id={id} className={'reveal ' + (visible ? 'reveal--visible ' : '') + className} style={{ '--reveal-delay': delay + 'ms' }}>{children}</div>
 }

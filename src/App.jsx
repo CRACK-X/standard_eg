@@ -116,7 +116,7 @@ function OpenBuffetSection() {
   }
 
   return (
-    <Reveal className="open-buffet-section">
+    <Reveal id="open-buffet" className="open-buffet-section scroll-target">
       <div className="open-buffet-section__header">
         <p className="eyebrow open-buffet-section__eyebrow">{ob.eyebrow}</p>
         <h2>{ob.title}</h2>

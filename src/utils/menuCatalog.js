@@ -4,6 +4,7 @@ export const menuCatalog = {
     title: 'Menu selections made for your celebration.',
     copy: 'Choose from our most-loved food stations and dishes. Every event is tailored with our catering team, so no fixed prices are listed here.',
     note: 'Menu availability and final selections are confirmed with our catering team.',
+    openBuffetLabel: 'Open Buffet',
     collections: {
       streetFood: {
         title: 'Street Food & Savoury',
@@ -46,6 +47,7 @@ export const menuCatalog = {
     title: 'اختيارات منيو مُعدة لاحتفالك.',
     copy: 'اختار من محطات الطعام الأكثر طلباً وأطباقنا المميزة. كل مناسبة بنخصصها مع فريق الضيافة، لذلك لا نعرض أسعار ثابتة هنا.',
     note: 'يتم تأكيد توفر الأصناف والاختيارات النهائية مع فريق الضيافة.',
+    openBuffetLabel: 'البوفيه المفتوح',
     collections: {
       streetFood: {
         title: 'ستريت فود وأصناف مالحة',

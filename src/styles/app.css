@@ -1072,6 +1072,9 @@ html[lang="ar"] .logo { direction: ltr; }
   text-decoration: none; transition: border-color .2s, background .2s, transform .2s;
 }
 .menu-catalog__nav a:hover { border-color: var(--gold); background: var(--gold-light); transform: translateY(-1px); }
+.menu-catalog__nav a.menu-catalog__nav-open-buffet { background: var(--navy); color: #fff; border-color: var(--navy); }
+.menu-catalog__nav a.menu-catalog__nav-open-buffet:hover { background: var(--navy-light); border-color: var(--navy-light); }
+.scroll-target { scroll-margin-top: 110px; }
 
 .menu-catalog__grid { align-items: stretch; gap: 30px; }
 .menu-catalog__grid > * { display: flex; flex-direction: column; }
