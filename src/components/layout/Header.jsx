@@ -46,7 +46,7 @@ export default function Header() {
               <span className="cart-badge">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
             )}
           </button>
-          <Link className="button button--gold header__cta" to="/order" onClick={closeMenu}>{c.nav.order} <ArrowRight size={16} /></Link>
+          <button className="button button--gold header__cta" onClick={() => { closeMenu(); setIsCartOpen(true); }}>{c.nav.order} <ArrowRight size={16} /></button>
         </div>
       </nav>
     </div>

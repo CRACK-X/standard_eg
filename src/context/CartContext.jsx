@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 
+export const MIN_QUANTITY = 10;
+
 const CartContext = createContext(undefined);
 
 function initCart() {
@@ -16,19 +18,20 @@ function cartReducer(state, action) {
       const existingItemIndex = state.items.findIndex(
         item => item.id === action.payload.id && item.note === action.payload.note
       );
+      const minQty = action.payload.collection === 'openBuffet' ? 1 : MIN_QUANTITY;
       if (existingItemIndex >= 0) {
         const newItems = [...state.items];
-        newItems[existingItemIndex].quantity += action.payload.quantity;
+        newItems[existingItemIndex].quantity += Math.max(minQty, action.payload.quantity);
         return { ...state, items: newItems };
       }
-      return { ...state, items: [...state.items, action.payload] };
+      return { ...state, items: [...state.items, { ...action.payload, quantity: Math.max(minQty, action.payload.quantity) }] };
     }
     case 'UPDATE_QUANTITY': {
       return {
         ...state,
         items: state.items.map(item =>
           item.id === action.payload.id && item.note === action.payload.oldNote
-            ? { ...item, quantity: Math.max(1, action.payload.quantity) }
+            ? { ...item, quantity: Math.max(item.collection === 'openBuffet' ? 1 : MIN_QUANTITY, action.payload.quantity) }
             : item
         ),
       };

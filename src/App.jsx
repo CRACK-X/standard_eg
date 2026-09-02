@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import {
   ArrowRight, ArrowUpRight, Building2, CalendarDays, Check, ChevronDown, Clock,
-  ChevronLeft, CircleCheck, Heart, Home as HomeIcon, Mail, MapPin, MessageCircle, PartyPopper,
-  Phone, Plus, SendHorizonal, ShoppingCart, Star, Truck, Users, Utensils,
+  ChevronLeft, CircleCheck, Heart, Home as HomeIcon, Mail, MapPin, MessageCircle, Minus, PartyPopper,
+  Phone, Plus, Search, SendHorizonal, ShoppingCart, Star, Truck, Users, Utensils, X,
 } from 'lucide-react'
 import {
   BrowserRouter, Link, Route, Routes, useLocation, useNavigate,
@@ -21,7 +21,7 @@ import PageHero from './components/marketing/PageHero'
 import TrustMarquee from './components/marketing/TrustMarquee'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Terms from './pages/Terms'
-import { addonKeys, contact, gallerySources, heroImage, storyImage, whyStandardImage } from './utils/siteData'
+import { aboutGallerySources, addonKeys, contact, gallerySources, heroImage, openBuffetImage, storyImages, whyStandardImage } from './utils/siteData'
 import { useCart } from './context/CartContext'
 import { loadOrderDraft } from './utils/order'
 import { buildContactWhatsAppUrl, buildOrderWhatsAppUrl } from './utils/whatsapp'
@@ -31,8 +31,14 @@ import './styles/app.css'
 
 function Home() {
   const { c } = useLocale()
+  const { setIsCartOpen } = useCart()
   const h = c.home
   usePageMeta()
+  
+  const handleRequestQuote = () => {
+    setIsCartOpen(true)
+  }
+  
   return <>
     <section className="home-hero">
       <img src={heroImage} alt="" className="home-hero__bg" fetchPriority="high" loading="eager" width="1200" height="800" />
@@ -41,7 +47,7 @@ function Home() {
         <Eyebrow>{h.eyebrow}</Eyebrow>
         <h1>{h.titleStart}<br />{h.titleMiddle} <em>{h.titleAccent}</em></h1>
         <p>{h.intro}</p>
-        <div className="button-row"><Link className="button button--gold" to="/order">{h.quote} <ArrowRight size={17} /></Link><Link className="button button--ghost" to="/menu">{h.packages}</Link></div>
+        <div className="button-row"><button className="button button--gold" onClick={handleRequestQuote}>{h.quote} <ArrowRight size={17} /></button><Link className="button button--ghost" to="/menu">{h.packages}</Link></div>
         <div className="hero-scroll"><span /> {h.scroll}</div>
       </div>
     </section>
@@ -54,7 +60,7 @@ function Home() {
     </section>
     <section className="gallery-section">
       <Reveal className="shell gallery-heading"><div><Eyebrow>{h.galleryEyebrow}</Eyebrow><h2>{h.galleryTitle} <em>{h.galleryAccent}</em></h2></div><a className="text-link" href="https://instagram.com/standard_egypt" target="_blank" rel="noreferrer">{h.follow} <ArrowUpRight size={17} /></a></Reveal>
-      <Reveal className="shell"><MasonryGallery className="home-masonry" label={h.galleryTitle} items={gallerySources.map((src, i) => ({ src, alt: c.galleryAlt[i] }))} /></Reveal>
+      <Reveal className="shell"><MasonryGallery className="home-masonry" label={h.galleryTitle} items={gallerySources.map((src, i) => ({ src, alt: `${h.galleryTitle} ${i + 1}` }))} /></Reveal>
     </section>
     <section className="why-section"><div className="shell why-section__grid">
       <Reveal className="why-section__image"><img src={whyStandardImage} alt={h.imageAlt} loading="lazy" width="600" height="535" /><span className="image-stamp"><Star fill="currentColor" size={20} /> <b>{h.made}<br />{h.mobile}</b></span></Reveal>
@@ -71,21 +77,206 @@ function ServiceCard({ icon, count, title, copy }) {
 
 function Menu() {
   const { c } = useLocale()
+  const { setIsCartOpen } = useCart()
   const m = c.menu
   usePageMeta()
+  
+  const handleAddonClick = () => {
+    setIsCartOpen(true)
+  }
+  
   return <><PageHero eyebrow={m.eyebrow} title={<>{m.title} <em>{m.accent}</em></>} copy={m.copy} />
     <section className="section shell package-section">
       <MenuCatalog />
-      <Reveal className="addons"><SectionIntro eyebrow={m.addonsEyebrow} title={m.addonsTitle} /><div className="addon-list">{m.addons.map((item, i) => <Link key={item} to={'/order?service=' + addonKeys[i]}><span>{String(i + 1).padStart(2, '0')}</span>{item}<Plus size={17} /></Link>)}</div></Reveal>
+      <OpenBuffetSection />
+      <Reveal className="addons"><SectionIntro eyebrow={m.addonsEyebrow} title={m.addonsTitle} /><div className="addon-list">{m.addons.map((item, i) => <button key={item} onClick={handleAddonClick} className="addon-item"><span>{String(i + 1).padStart(2, '0')}</span>{item}<Plus size={17} /></button>)}</div></Reveal>
     </section><CtaBand /></>
+}
+
+function OpenBuffetSection() {
+  const { c, language } = useLocale()
+  const { setIsCartOpen } = useCart()
+  const ob = c.menu.openBuffet
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedSection, setSelectedSection] = useState('all')
+
+  const filterItems = (items) => {
+    return items.filter(item =>
+      item.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }
+
+  const mainItems = filterItems(ob.items)
+  const extraItems = filterItems(ob.extras)
+
+  const hasResults = mainItems.length > 0 || extraItems.length > 0
+
+  const handleRequestPackage = () => {
+    setIsCartOpen(true)
+  }
+
+  return (
+    <Reveal className="open-buffet-section">
+      <div className="open-buffet-section__header">
+        <p className="eyebrow open-buffet-section__eyebrow">{ob.eyebrow}</p>
+        <h2>{ob.title}</h2>
+        <p className="open-buffet-section__subtitle">{ob.subtitle}</p>
+      </div>
+      
+      <div className="open-buffet-section__controls">
+        <div className="open-buffet-section__search">
+          <Search size={18} />
+          <input
+            type="text"
+            placeholder={language === 'ar' ? 'ابحث في البوفيه...' : 'Search buffet...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search buffet"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} aria-label="Clear search">
+              <X size={18} />
+            </button>
+          )}
+        </div>
+        
+        <div className="open-buffet-section__filter">
+          <button
+            className={selectedSection === 'all' ? 'active' : ''}
+            onClick={() => setSelectedSection('all')}
+          >
+            {language === 'ar' ? 'الكل' : 'All'}
+          </button>
+          <button
+            className={selectedSection === 'main' ? 'active' : ''}
+            onClick={() => setSelectedSection('main')}
+          >
+            {ob.mainItemsTitle}
+          </button>
+          <button
+            className={selectedSection === 'extras' ? 'active' : ''}
+            onClick={() => setSelectedSection('extras')}
+          >
+            {ob.extrasTitle}
+          </button>
+        </div>
+      </div>
+
+      <div className="open-buffet-section__banner">
+        <img src={openBuffetImage} alt={ob.title} loading="lazy" width="1200" height="600" />
+      </div>
+      
+      {hasResults ? (
+        <div className="open-buffet-section__body">
+          {(selectedSection === 'all' || selectedSection === 'main') && mainItems.length > 0 && (
+            <div className="open-buffet-section__col">
+              <h3 className="open-buffet-col__title">{ob.mainItemsTitle}</h3>
+              <ul className="open-buffet-item-list">
+                {mainItems.map((item) => (
+                  <OpenBuffetItemRow key={item} item={item} num={ob.items.indexOf(item) + 1} />
+                ))}
+              </ul>
+            </div>
+          )}
+          {(selectedSection === 'all' || selectedSection === 'extras') && extraItems.length > 0 && (
+            <div className="open-buffet-section__col open-buffet-section__col--right">
+              <h3 className="open-buffet-col__title">{ob.extrasTitle}</h3>
+              <ul className="open-buffet-item-list">
+                {extraItems.map((item) => (
+                  <OpenBuffetItemRow key={item} item={item} num={ob.extras.indexOf(item) + 1} />
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="open-buffet-section__no-results">
+          <p>{language === 'ar' ? 'لم يتم العثور على نتائج' : 'No results found'}</p>
+          <button onClick={() => setSearchQuery('')}>
+            {language === 'ar' ? 'مسح البحث' : 'Clear search'}
+          </button>
+        </div>
+      )}
+      
+      <p className="open-buffet-section__note">{ob.note}</p>
+      <div className="open-buffet-section__cta">
+        <button className="button button--gold" onClick={handleRequestPackage}>{ob.cta} <ArrowRight size={17} /></button>
+      </div>
+    </Reveal>
+  )
+}
+
+function OpenBuffetItemRow({ item, num }) {
+  const { addToCart } = useCart()
+  const [quantity, setQuantity] = useState(1)
+  const [added, setAdded] = useState(false)
+
+  const handleAdd = () => {
+    addToCart({
+      id: `open-buffet-${item}`.toLowerCase().replace(/\s+/g, '-'),
+      name: item,
+      quantity,
+      note: '',
+      collection: 'openBuffet'
+    })
+    setAdded(true)
+    setQuantity(1)
+    setTimeout(() => setAdded(false), 1500)
+  }
+
+  const handleQuickAdd = (qty) => {
+    addToCart({
+      id: `open-buffet-${item}`.toLowerCase().replace(/\s+/g, '-'),
+      name: item,
+      quantity: qty,
+      note: '',
+      collection: 'openBuffet'
+    })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1500)
+  }
+
+  return (
+    <li className="menu-item-row" style={{ borderBottom: '1px dashed rgba(231,223,207,.6)', margin: '0', padding: '9px 0' }}>
+      <div className="menu-item-row__name">
+        <span className="open-buffet-item-list__num" style={{ marginRight: '10px' }}>{num}</span>
+        <span>{item}</span>
+      </div>
+      <div className="menu-item-row__actions">
+        <div className="menu-item-row__qty">
+          <button aria-label="Decrease quantity" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus size={12} /></button>
+          <span>{quantity}</span>
+          <button aria-label="Increase quantity" onClick={() => setQuantity(q => q + 1)}><Plus size={12} /></button>
+        </div>
+        <div className="menu-item-row__presets">
+          <button onClick={() => handleQuickAdd(1)} aria-label="Add 1">1</button>
+          <button onClick={() => handleQuickAdd(5)} aria-label="Add 5">5</button>
+          <button onClick={() => handleQuickAdd(10)} aria-label="Add 10">10</button>
+        </div>
+        <button
+          className={`menu-item-row__add ${added ? 'menu-item-row__add--added' : ''}`}
+          onClick={handleAdd}
+          aria-label={`Add ${item} to cart`}
+        >
+          {added ? <Check size={14} /> : <ShoppingCart size={14} />}
+        </button>
+      </div>
+    </li>
+  )
 }
 
 function About() {
   const { c } = useLocale()
+  const { setIsCartOpen } = useCart()
   const a = c.about
   usePageMeta()
+  
+  const handleTellUsAboutEvent = () => {
+    setIsCartOpen(true)
+  }
+  
   return <><PageHero eyebrow={a.eyebrow} title={<>{a.title} <em>{a.accent}</em></>} copy={a.copy} />
-    <section className="section shell story-grid"><Reveal className="story-grid__image"><MasonryGallery className="story-masonry" label={a.imageAlt} items={[{ src: storyImage, alt: a.imageAlt }, { src: gallerySources[0], alt: c.galleryAlt[0] }, { src: gallerySources[3], alt: c.galleryAlt[3] }]} /></Reveal><Reveal delay={110} className="story-grid__content"><SectionIntro eyebrow={a.storyEyebrow} title={a.storyTitle} /><p>{a.p1}</p><p>{a.p2}</p><Link className="text-link" to="/order">{a.event} <ArrowRight size={17} /></Link></Reveal></section>
+    <section className="section shell story-grid"><Reveal className="story-grid__image"><MasonryGallery className="story-masonry" label={a.imageAlt} items={storyImages.map((src, i) => ({ src, alt: `${a.imageAlt} ${i + 1}` }))} /></Reveal><Reveal delay={110} className="story-grid__content"><SectionIntro eyebrow={a.storyEyebrow} title={a.storyTitle} /><p>{a.p1}</p><p>{a.p2}</p><button className="text-link" onClick={handleTellUsAboutEvent}>{a.event} <ArrowRight size={17} /></button></Reveal></section>
     <section className="occasion-section"><div className="shell"><Reveal><SectionIntro eyebrow={a.occasionEyebrow} title={a.occasionTitle} centered /></Reveal><div className="occasion-grid">{a.occasions.map((title, i) => <Reveal key={title} delay={i * 75}><Occasion icon={i === 0 ? <Heart /> : i === 1 ? <Building2 /> : i === 2 ? <PartyPopper /> : <Users />} title={title} /></Reveal>)}</div></div></section>
     <section className="section shell faq-section">
       <Reveal><SectionIntro eyebrow={c.faq.eyebrow} title={c.faq.title} centered /></Reveal>
@@ -93,7 +284,7 @@ function About() {
         {c.faq.items.map((item, i) => <div className="faq-item" key={i}><h3>{item.q}</h3><p>{item.a}</p></div>)}
       </Reveal>
     </section>
-    <section className="shell about-gallery"><Reveal className="about-gallery__heading"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal><Reveal delay={85}><MasonryGallery className="about-masonry" label={a.gallery} items={[gallerySources[3], gallerySources[5], gallerySources[1], gallerySources[0], gallerySources[4], gallerySources[2]].map((src, i) => ({ src, alt: c.galleryAlt[[3, 5, 1, 0, 4, 2][i]] }))} /></Reveal></section>
+    <section className="shell about-gallery"><Reveal className="about-gallery__heading"><p>{a.gallery} <em>{a.galleryAccent}</em></p></Reveal><Reveal delay={85}><MasonryGallery className="about-masonry" label={a.gallery} items={aboutGallerySources.map((src, i) => ({ src, alt: `${a.gallery} ${i + 1}` }))} /></Reveal></section>
     <CtaBand />
   </>
 }
@@ -330,4 +521,3 @@ function App() {
 }
 
 export default App
-

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart, MIN_QUANTITY } from '../../context/CartContext';
 import { X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLocale } from '../../utils/i18n';
@@ -9,6 +9,11 @@ export default function CartDrawer() {
   const navigate = useNavigate();
   const { c } = useLocale();
   const t = c.cart;
+
+  const getMinQuantity = (item) => {
+    // Open buffet items have minimum 1, others have MIN_QUANTITY (10)
+    return item.collection === 'openBuffet' ? 1 : MIN_QUANTITY;
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -51,51 +56,54 @@ export default function CartDrawer() {
             </div>
           ) : (
             <ul className="cart-drawer__items">
-              {items.map((item) => (
-                <li key={item.id + item.note} className="cart-item">
-                  <div className="cart-item__details">
-                    <h3>{item.name}</h3>
+              {items.map((item) => {
+                const minQty = getMinQuantity(item);
+                return (
+                  <li key={item.id + item.note} className="cart-item">
+                    <div className="cart-item__details">
+                      <h3>{item.name}</h3>
 
-                    <div className="cart-item__controls">
-                      <div className="quantity-selector">
+                      <div className="cart-item__controls">
+                        <div className="quantity-selector">
+                          <button
+                            aria-label={t.decrease}
+                            onClick={() => updateQuantity(item.id, item.note, item.quantity - 1)}
+                            disabled={item.quantity <= minQty}
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span>{item.quantity}</span>
+                          <button
+                            aria-label={t.increase}
+                            onClick={() => updateQuantity(item.id, item.note, item.quantity + 1)}
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+
                         <button
-                          aria-label={t.decrease}
-                          onClick={() => updateQuantity(item.id, item.note, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
+                          className="cart-item__remove"
+                          aria-label={`${t.remove} ${item.name}`}
+                          onClick={() => removeFromCart(item.id, item.note)}
                         >
-                          <Minus size={14} />
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button
-                          aria-label={t.increase}
-                          onClick={() => updateQuantity(item.id, item.note, item.quantity + 1)}
-                        >
-                          <Plus size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
 
-                      <button
-                        className="cart-item__remove"
-                        aria-label={`${t.remove} ${item.name}`}
-                        onClick={() => removeFromCart(item.id, item.note)}
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <label className="cart-item__note">
+                        <small>{t.note}</small>
+                        <input
+                          type="text"
+                          value={item.note}
+                          onChange={(e) => updateNote(item.id, item.note, e.target.value)}
+                          placeholder={t.notePlaceholder}
+                          aria-label={t.specialRequests}
+                        />
+                      </label>
                     </div>
-
-                    <label className="cart-item__note">
-                      <small>{t.note}</small>
-                      <input
-                        type="text"
-                        value={item.note}
-                        onChange={(e) => updateNote(item.id, item.note, e.target.value)}
-                        placeholder={t.notePlaceholder}
-                        aria-label={t.specialRequests}
-                      />
-                    </label>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
